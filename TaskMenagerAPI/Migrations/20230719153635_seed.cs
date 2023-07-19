@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -34,7 +35,8 @@ namespace TaskMenagerAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -59,11 +61,11 @@ namespace TaskMenagerAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "ToDoes",
-                columns: new[] { "Id", "Description", "Status", "Title", "UserId" },
+                columns: new[] { "Id", "Description", "DueDate", "Status", "Title", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Test2", "ok", "Test", 1 },
-                    { 2, "Test2", "ok", "Test2", 2 }
+                    { 1, "Test", new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "Test", 1 },
+                    { 2, "Test2", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Test2", 2 }
                 });
 
             migrationBuilder.CreateIndex(

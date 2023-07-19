@@ -23,9 +23,9 @@ namespace TaskMenagerAPI.Repository
 
         public ICollection<ToDo> GetAllToDo()
         {
-        
 
             return _context.ToDoes.ToList();
+            
         }
 
         public ToDo GetTodo(int todoId)
