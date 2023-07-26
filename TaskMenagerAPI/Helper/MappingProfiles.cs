@@ -12,6 +12,8 @@ namespace TaskMenagerAPI.Helper
             CreateMap<UserDTO, User>();
             CreateMap<ToDo, ToDoDTO>();
             CreateMap<ToDoDTO, ToDo>();
+            CreateMap<User, RegisterUserDto>();
+            CreateMap<RegisterUserDto, User>();
         }
     }
 }

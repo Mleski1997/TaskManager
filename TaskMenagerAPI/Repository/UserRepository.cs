@@ -38,12 +38,12 @@ namespace TaskMenagerAPI.Repository
 
         public ICollection<ToDo> GetTodoesFromTodo(int userId)
         {
-            return _context.ToDoes.Where(r => r.User.Id == userId).ToList();
+            return _context.ToDoes.Where(r => r.Id == userId).ToList();
         }
 
         public User GetUser(int userId)
         {
-            return _context.Users.Where(u => u.Id == userId).Include(e => e.Todoes).FirstOrDefault();
+            return _context.Users.Where(u => userId == userId).Include(e => e.Todoes).FirstOrDefault();
         }
 
         public ICollection<User> GetUsers()

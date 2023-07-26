@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Collections.Generic;
+using System.Linq;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
@@ -41,6 +42,49 @@ namespace TaskMenagerAPI.Controllers
             return Ok(todoes);
         
         }
+
+        [HttpGet("Sort/Date")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
+        public IActionResult GetAllTodoesByDate()
+        {
+            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoByDate());
+            return Ok(todoes);
+        }
+
+        [HttpGet("Sort/Status")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
+        public IActionResult GetAllTodoesByStatus()
+        {
+            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoByStatus());
+            return Ok(todoes);
+        }
+
+        [HttpGet("Filter/Title")]
+        public IActionResult GetAllFilterByTitle(string title)
+        {
+            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllFilterByTitle(title));
+            return Ok(todoes);
+
+        }
+        [HttpGet("Filter/Status")]
+        public IActionResult GetAllFilterByStatus([FromQuery] Status status)
+        {
+            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllFilterByStatus(status));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (todoes.Count == 0)
+            {
+                return BadRequest("Task with this status doesnt exists");
+            }
+            return Ok(todoes);
+
+        }
+
+
+
+
+
         [HttpGet("{todoId}")]
         [ProducesResponseType(200, Type = typeof(ToDo))]
         [ProducesResponseType(400)]
@@ -49,11 +93,7 @@ namespace TaskMenagerAPI.Controllers
            
             var todo = _mapper.Map<ToDoDTO>(_toDoRepository.GetTodo(todoId));
 
-            if(!ModelState.IsValid)
-
-            {
-                return BadRequest(ModelState);
-            }
+         
 
 
             return Ok(todo);
@@ -82,7 +122,7 @@ namespace TaskMenagerAPI.Controllers
             }
 
             var todoMap = _mapper.Map<ToDo>(todoCreate);
-
+            
             todoMap.User = _userRepository.GetUser(userId);
 
             if(!_toDoRepository.CreateToDo(todoMap))

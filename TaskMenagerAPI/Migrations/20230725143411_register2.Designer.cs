@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230725143411_register2")]
+    partial class register2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,7 +271,7 @@ namespace TaskMenagerAPI.Migrations
                             DueDate = new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             Title = "Test",
-                            UserId = "2"
+                            UserId = "1"
                         },
                         new
                         {
@@ -301,13 +304,13 @@ namespace TaskMenagerAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "84d85e76-a987-4b86-8de0-40ae75724922",
+                            Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c49f8e26-daef-4192-affa-2b808c582fba",
+                            ConcurrencyStamp = "bdf22dd7-b7bb-4c9e-b8c4-ff601a33656b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "338b71b8-a09f-4129-b55c-e74e467d0a90",
+                            SecurityStamp = "5988d43c-6a44-4c28-b40f-cf307523c1de",
                             TwoFactorEnabled = false,
                             FirstName = "Test",
                             LastName = "Test",
@@ -315,13 +318,13 @@ namespace TaskMenagerAPI.Migrations
                         },
                         new
                         {
-                            Id = "dbec1502-d0c3-44a4-a866-18db91b37fe2",
+                            Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "175fbeaf-de97-464a-9b84-f276bf08d318",
+                            ConcurrencyStamp = "8fbe60ed-2576-49b2-9ec9-3ad80efd3bf6",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ebe58338-317b-4372-9bf4-712c6b9acc5a",
+                            SecurityStamp = "26af1cd2-b138-4eea-bcbf-beea77c216b1",
                             TwoFactorEnabled = false,
                             FirstName = "Test2",
                             LastName = "Test2",

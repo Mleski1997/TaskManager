@@ -25,7 +25,7 @@ namespace TaskMenagerAPI.Controllers
 
 
         [HttpGet(Name = "GetUsers")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserDTO>))]
         public IActionResult GetUsers() 
         {
             var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
@@ -82,7 +82,7 @@ namespace TaskMenagerAPI.Controllers
                 return BadRequest(ModelState);
 
             var user = _userRepository.GetUsers()
-                .Where(c => c.LastName.Trim().ToUpper() == userCreate.LastName.TrimEnd().ToUpper())
+                .Where(c => c.UserName.Trim().ToUpper() == userCreate.LastName.TrimEnd().ToUpper())
                 .FirstOrDefault();
 
             if (user != null)

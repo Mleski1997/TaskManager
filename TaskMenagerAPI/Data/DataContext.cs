@@ -1,46 +1,43 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
-        
-
-        public DataContext(DbContextOptions<DataContext> options) : base(options) 
-        { 
-        
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
         }
-
-        public DbSet<User> Users { get; set; }
         public DbSet<ToDo> ToDoes { get; set; }
+        public DbSet<User> Users { get ; set; }
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
-          
+
 
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
-                    Id = 1,
-                    FirstName = "Test",
-                    LastName = "Test",
+                    
+                    UserName = "Test",
+
                 },
                 new User
                 {
-                    Id = 2,
-                    FirstName = "Test2",
-                    LastName = "Test2",
-                });
+                   
+                    UserName = "test2"
+                }) ;
 
             modelBuilder.Entity<ToDo>().HasData(
                 new ToDo
                 {
                     Id = 1,
-                    UserId = 1,
+                    UserId ="2",
                     Title = "Test",
                     Description = "Test",
                     Status = Status.Success,
@@ -49,7 +46,7 @@ namespace TaskMenagerAPI.Data
                 new ToDo
                 {
                     Id = 2,
-                    UserId = 2,
+                    UserId = "2",
                     Title = "Test2",
                     Description = "Test2",
                     Status = Status.Blocked,
@@ -58,9 +55,9 @@ namespace TaskMenagerAPI.Data
                 );
 
 
-            modelBuilder.Entity<User>()
-                .HasMany(p => p.Todoes)
-                .WithOne(c => c.User)
+            modelBuilder.Entity<ToDo>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.Todoes)
                 .HasForeignKey(c => c.UserId);
                 
 

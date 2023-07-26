@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230724161240_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,10 +89,6 @@ namespace TaskMenagerAPI.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -141,10 +140,6 @@ namespace TaskMenagerAPI.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -250,9 +245,8 @@ namespace TaskMenagerAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -268,7 +262,7 @@ namespace TaskMenagerAPI.Migrations
                             DueDate = new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             Title = "Test",
-                            UserId = "2"
+                            UserId = 1
                         },
                         new
                         {
@@ -277,13 +271,17 @@ namespace TaskMenagerAPI.Migrations
                             DueDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Title = "Test2",
-                            UserId = "2"
+                            UserId = 2
                         });
                 });
 
             modelBuilder.Entity("TaskMenagerAPI.Models.User", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -293,39 +291,22 @@ namespace TaskMenagerAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("UserIsActive")
-                        .HasColumnType("bit");
+                    b.HasKey("Id");
 
-                    b.HasDiscriminator().HasValue("User");
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = "84d85e76-a987-4b86-8de0-40ae75724922",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c49f8e26-daef-4192-affa-2b808c582fba",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "338b71b8-a09f-4129-b55c-e74e467d0a90",
-                            TwoFactorEnabled = false,
+                            Id = 1,
                             FirstName = "Test",
-                            LastName = "Test",
-                            UserIsActive = false
+                            LastName = "Test"
                         },
                         new
                         {
-                            Id = "dbec1502-d0c3-44a4-a866-18db91b37fe2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "175fbeaf-de97-464a-9b84-f276bf08d318",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "ebe58338-317b-4372-9bf4-712c6b9acc5a",
-                            TwoFactorEnabled = false,
+                            Id = 2,
                             FirstName = "Test2",
-                            LastName = "Test2",
-                            UserIsActive = false
+                            LastName = "Test2"
                         });
                 });
 

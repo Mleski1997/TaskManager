@@ -27,6 +27,27 @@ namespace TaskMenagerAPI.Repository
             return _context.ToDoes.ToList();
             
         }
+        public ICollection<ToDo> GetAllToDoByDate()
+        {
+
+            return _context.ToDoes.OrderBy(c => c.DueDate).ToList();
+
+        }
+        public ICollection<ToDo> GetAllToDoByStatus()
+        {
+
+            return _context.ToDoes.OrderBy(c => c.Status).ToList();
+
+        }
+
+        public ICollection<ToDo> GetAllFilterByTitle(string title)
+        {
+            return _context.ToDoes.Where(c => c.Title.ToLower() == title.ToLower()).ToList();
+        }
+        public ICollection<ToDo> GetAllFilterByStatus(Status status)
+        {
+            return _context.ToDoes.Where(c => c.Status == status).ToList();
+        }
 
         public ToDo GetTodo(int todoId)
         {
