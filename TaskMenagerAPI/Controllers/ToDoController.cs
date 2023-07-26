@@ -105,7 +105,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
 
-        public IActionResult CreateTodo([FromQuery] int userId, [FromBody] ToDoDTO todoCreate)
+        public IActionResult CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
         {
             var todoes = _toDoRepository.GetAllToDo()
                 .Where(x => x.Title.Trim().ToUpper() ==  todoCreate.Title.Trim().ToUpper())

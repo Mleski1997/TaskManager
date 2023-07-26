@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TaskMenagerAPI.Data;
+using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
 
@@ -19,15 +20,23 @@ namespace TaskMenagerAPI.Repository
             _mapper = mapper;
         }
 
-        public bool CreateUser(User user)
+        public ICollection<User> GetUsers()
         {
-            _context.Add(user);
-           
-
-            return Save();
-
-
+            return _context.Users.ToList();
         }
+
+        public User GetUser(string userId)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id == userId);
+        }
+        public ICollection<ToDo> GetTodoesFromTodo(int userId)
+        {
+            return _context.ToDoes.Where(r => r.Id == userId).ToList();
+        }
+
+
+
+
 
         public bool DeleteUser(User user)
         {
@@ -36,26 +45,16 @@ namespace TaskMenagerAPI.Repository
             return Save();
         }
 
-        public ICollection<ToDo> GetTodoesFromTodo(int userId)
-        {
-            return _context.ToDoes.Where(r => r.Id == userId).ToList();
-        }
 
-        public User GetUser(int userId)
+        public bool UpdateUser(string userId, UserDTO updatedUser)
         {
-            return _context.Users.Where(u => userId == userId).Include(e => e.Todoes).FirstOrDefault();
-        }
+           var exist = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (exist == null)
+            {
+                return false;
+            }
 
-        public ICollection<User> GetUsers()
-        {
-            return _context.Users.ToList();
-        }
-
-        
-
-        public bool UpdateUser(User user)
-        {
-            _context.Update(user);
+            exist.UserName = updatedUser.UserName;
             return Save();
         }
 

@@ -295,11 +295,11 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "261ce4c7-f912-4474-bb8c-45a24f6cd036",
+                            ConcurrencyStamp = "8d81bb2d-a5ef-4e0c-8c3d-a1c5df396c68",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d5551064-7435-4d75-8682-4ad048267a09",
+                            SecurityStamp = "7f6fb2f8-db21-4d11-9c0f-b1cbef48dda3",
                             TwoFactorEnabled = false,
                             UserName = "Test",
                             UserIsActive = false
@@ -308,11 +308,11 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8a99ebd2-aac8-45c7-b404-3f885fcb45ed",
+                            ConcurrencyStamp = "fec05217-c852-44c0-9f34-8c26ff51b39b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1fdbb449-fccd-4ed9-adae-d4edcdf7146b",
+                            SecurityStamp = "bf7da99f-5e1d-4c36-90e0-96aaf64ce008",
                             TwoFactorEnabled = false,
                             UserName = "test2",
                             UserIsActive = false

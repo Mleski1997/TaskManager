@@ -2,9 +2,10 @@
 
 namespace TaskMenagerAPI.DTO
 {
-    public class UserDTO
+    public class UserWithTaskDTO
     {
         public string Id { get; set; }
         public string UserName { get; set; }
-    }      
+        public ICollection<ToDo> Todoes { get; set; }
+    }
 }

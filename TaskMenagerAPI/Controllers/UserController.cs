@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Diagnostics.Metrics;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
@@ -14,40 +16,44 @@ namespace TaskMenagerAPI.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        
+        private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _user;
 
-        public UserController(IUserRepository userRepository, IMapper mapper)
+        public UserController(IUserRepository userRepository, IMapper mapper, DataContext context, UserManager<IdentityUser> user)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            
+            _context = context;
+            _user = user;
         }
 
 
         [HttpGet(Name = "GetUsers")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<UserDTO>))]
+        [ProducesResponseType(200, Type = typeof(UserDTO))]
         public IActionResult GetUsers() 
+
         {
-            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
+
+            var userDto = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers()); ;
             
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(users);
+            return Ok(userDto);
 
         }
 
         [HttpGet("{userId}")]
-        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(200, Type = typeof(UserWithTaskDTO))]
         [ProducesResponseType(400)]
 
-        public IActionResult GetUser(int userId) {
+        public IActionResult GetUser(string userId)
+        {
 
-           
-            
-            var user = _mapper.Map<UserDTO>(_userRepository.GetUser(userId));
+              
+            var user = _mapper.Map<UserWithTaskDTO>(_userRepository.GetUser(userId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -56,6 +62,8 @@ namespace TaskMenagerAPI.Controllers
             return Ok(user);   
         
         }
+
+
         [HttpGet("{userId}/Todoes")]
     
         public IActionResult GetTodoesFromTodo(int userId)
@@ -72,61 +80,22 @@ namespace TaskMenagerAPI.Controllers
         }
 
 
-        [HttpPost]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public IActionResult CreateUser([FromBody] UserDTO userCreate)
-        {
-            if (userCreate == null)
-                return BadRequest(ModelState);
-
-            var user = _userRepository.GetUsers()
-                .Where(c => c.UserName.Trim().ToUpper() == userCreate.LastName.TrimEnd().ToUpper())
-                .FirstOrDefault();
-
-            if (user != null)
-            {
-                ModelState.AddModelError("", "Category already exists");
-                return StatusCode(422, ModelState);
-            }
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var userMap = _mapper.Map<User>(userCreate);
-
-            if (!_userRepository.CreateUser(userMap))
-            {
-                ModelState.AddModelError("", "Something went wrong while savin");
-                return StatusCode(500, ModelState);
-            }
-
-            return Ok("Successfully created");
-        }
 
         [HttpPut("{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
 
-        public IActionResult UpdateUser(int userId, [FromBody] UserDTO updatedUser)
+        public IActionResult Edit(string userId, [FromBody] UserDTO updatedUser)
         {
-            if (updatedUser == null)
-                return BadRequest(ModelState);
-            if (userId != updatedUser.Id)
-                return BadRequest(ModelState);
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            bool isUpdated = _userRepository.UpdateUser(userId, updatedUser);
 
-            var userMap = _mapper.Map<User>(updatedUser);
-            if (!_userRepository.UpdateUser(userMap))
+            if (!isUpdated)
             {
-                ModelState.AddModelError("", "Something wen wrong updating category");
-                return StatusCode(500, ModelState);
+                return NotFound("UserNotFound");
             }
-            return NoContent();
 
+            return Ok("Updated");
 
         }
         [HttpDelete("{userId}")]
@@ -134,7 +103,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
 
-        public IActionResult DeleteUser(int userId) {
+        public IActionResult DeleteUser(string userId) {
 
             var userToDelete = _userRepository.GetUser(userId);
 

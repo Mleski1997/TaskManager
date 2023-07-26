@@ -21,6 +21,7 @@ namespace TaskMenagerAPI.Repository
         {
             _userManager = userManager;
             _configuration = configuration;
+
             
         }
 
@@ -60,13 +61,16 @@ namespace TaskMenagerAPI.Repository
 
         public async Task<bool> RegisterUser (RegisterUserDto registerDto)
         {
-            var identityUser = new IdentityUser()
+            var User = new User()
             {
                 Email = registerDto.Email,
-                UserName = registerDto.UserName
+                UserName = registerDto.UserName,
+                UserIsActive = true
+                
+                
             };
 
-            var result = await _userManager.CreateAsync(identityUser, registerDto.Password);
+            var result = await _userManager.CreateAsync(User, registerDto.Password);
 
 
             return result.Succeeded;
