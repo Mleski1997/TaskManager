@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TaskMenagerAPI.Data;
+using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
 
@@ -26,6 +28,11 @@ namespace TaskMenagerAPI.Repository
 
             return _context.ToDoes.ToList();
             
+        }
+
+        public ICollection<ToDo> GetAllToDoFromUser(string userId)
+        {
+            return _context.ToDoes.Where(r => r.UserId == userId).ToList();
         }
         public ICollection<ToDo> GetAllToDoByDate()
         {
@@ -53,15 +60,16 @@ namespace TaskMenagerAPI.Repository
         {
             return _context.ToDoes.Include(t => t.User).FirstOrDefault(t => t.Id == todoId);
         }
-
-       
-     
-
-
     
-        public bool UpdateToDo(ToDo toDo)
+        public bool UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-            _context.Update(toDo);
+            var editToDo = _context.ToDoes.FirstOrDefault(t => t.Id == todoId);
+            if (editToDo == null)
+            {
+                return false;
+            }
+            if (Enum.TryParse<Status>(updatedToDo.Status, out Status parsedStatus))
+                editToDo.Status = parsedStatus;
             return Save();
         }
 
@@ -76,5 +84,7 @@ namespace TaskMenagerAPI.Repository
             _context.Remove(toDo);
             return Save();
         }
+
+       
     }
 }

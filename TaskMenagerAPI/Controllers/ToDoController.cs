@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -14,6 +15,8 @@ namespace TaskMenagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    
 
     public class ToDoController : Controller
     {
@@ -89,17 +92,38 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(ToDo))]
         [ProducesResponseType(400)]
         public IActionResult GetToDo(int todoId)
-        {
-           
+        {          
+            
+                
+
             var todo = _mapper.Map<ToDoDTO>(_toDoRepository.GetTodo(todoId));
 
-         
+            
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            return Ok(todo);
+        }
 
+        [HttpGet("{userId}/tasks")]
+        [ProducesResponseType(200, Type = typeof(ToDo))]
+        [ProducesResponseType(400)]
 
+        public IActionResult GetAllToDoFromUser(string  userId)
+        {
+            var todo = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoFromUser(userId));
             return Ok(todo);
 
-
         }
+
+
+
+
+
+
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -140,28 +164,16 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(404)]
         public IActionResult UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-            if (updatedToDo == null)
-                return BadRequest(ModelState);
+          bool toDoUpdated = _toDoRepository.UpdateToDo(todoId, updatedToDo);
 
-            if (todoId != updatedToDo.Id)
-                return BadRequest(ModelState);
-
-            var user = _context.Find<User>(updatedToDo.UserId);
-
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-
-            var todoMap = _mapper.Map<ToDo>(updatedToDo);
-
-            
-            if (!_toDoRepository.UpdateToDo(todoMap))
+           if(!toDoUpdated)
             {
-                ModelState.AddModelError("", "Something went wrong updating review");
-                return StatusCode(500, ModelState);
+                return NotFound("Something went wrong");
             }
 
-            return NoContent();
+            return Ok("Updated");
+
+            
 
             
         }

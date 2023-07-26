@@ -5,7 +5,7 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Data
 {
-    public class DataContext : IdentityDbContext<User>
+    public class DataContext : IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
