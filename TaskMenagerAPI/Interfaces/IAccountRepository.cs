@@ -6,7 +6,9 @@ namespace TaskMenagerAPI.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<IdentityUser> RegisterUser (RegisterUserDto registerDto);
-        string GenerateJetToken(IdentityUser user);
+        string GenerateJetToken(LoginUserDTO loginDto);
+        Task<bool> RegisterUser (RegisterUserDto registerDto);
+        Task<bool> LoginUser (LoginUserDTO loginDto);
+      
     }
 }

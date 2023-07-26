@@ -32,6 +32,7 @@ namespace TaskMenagerAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserIsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -50,20 +51,6 @@ namespace TaskMenagerAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,26 +169,26 @@ namespace TaskMenagerAPI.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ToDoes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ToDoes_Users_UserId",
+                        name: "FK_ToDoes_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "FirstName", "LastName" },
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserIsActive", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "Test", "Test" },
-                    { 2, "Test2", "Test2" }
+                    { "1", 0, "7a515155-cc90-48e1-a97c-e46ca8236876", null, false, false, null, null, null, null, null, false, "4e8db791-0567-4738-926f-c1f350efdda2", false, false, "Test" },
+                    { "2", 0, "c0d6362e-28d1-4381-9d8e-b2152f31ce84", null, false, false, null, null, null, null, null, false, "45b6d583-f700-4a6e-8944-43a34d4e8d35", false, false, "test2" }
                 });
 
             migrationBuilder.InsertData(
@@ -209,8 +196,8 @@ namespace TaskMenagerAPI.Migrations
                 columns: new[] { "Id", "Description", "DueDate", "Status", "Title", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Test", new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "Test", 1 },
-                    { 2, "Test2", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Test2", 2 }
+                    { 1, "Test", new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "Test", "2" },
+                    { 2, "Test2", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Test2", "2" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -284,9 +271,6 @@ namespace TaskMenagerAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

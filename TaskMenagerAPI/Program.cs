@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging.Signing;
 using System.Text;
 using System.Text.Json.Serialization;
-using TaskMenagerAPI.Configuration;
+
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
@@ -31,7 +31,7 @@ options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
-
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,7 +41,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentityCore<User>(options =>
+builder.Services.AddIdentityCore<IdentityUser>(options =>
 {
     options.Password.RequiredLength = 5;
     
@@ -49,7 +49,7 @@ builder.Services.AddIdentityCore<User>(options =>
                 .AddDefaultTokenProviders();
 
 
-builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,23 +57,28 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 })
-    .AddJwtBearer(jwt =>
+    .AddJwtBearer(options =>
     {
-        var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
-
-        jwt.SaveToken = true;
-        jwt.TokenValidationParameters = new TokenValidationParameters()
+        options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateActor = true,
             ValidateIssuer = true,
             ValidateAudience = true,
             RequireExpirationTime = true,
-            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
+            ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value))
+    };
+    }
+);
 
-        };
-    });
 
+
+   
+
+
+    
 
 
 /*builder.Services.AddAuthentication(options =>

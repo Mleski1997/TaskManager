@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TaskMenagerAPI.Configuration;
+
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
@@ -15,64 +15,62 @@ namespace TaskMenagerAPI.Repository
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly JwtConfig _jwtConfig;
+        
 
-        public AccountRepository(UserManager<IdentityUser> userManager, IConfiguration configuration, IOptions<JwtConfig> jwtConfig)
+        public AccountRepository(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
-            _jwtConfig = jwtConfig.Value;
+            
         }
 
-        public string GenerateJetToken(IdentityUser user)
+        public string GenerateJetToken(LoginUserDTO loginDto)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-
-            var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
-
-            var tokenDescripter = new SecurityTokenDescriptor()
+            var claims = new List<Claim>
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("Id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
-                }),
-
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                new Claim(ClaimTypes.Name,loginDto.UserName)
             };
 
-            var token = jwtTokenHandler.CreateToken(tokenDescripter);
-            var jwtTokenString = jwtTokenHandler.WriteToken(token);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
 
-            return jwtTokenString;
+            var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+
+
+            var securityToken = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60),
+                issuer: _configuration.GetSection("Jwt:Issuer").Value,
+                audience: _configuration.GetSection("Jwt:Audience").Value,
+                signingCredentials: signingCred);
+
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return tokenString;
         }
 
-        public async Task<IdentityUser> RegisterUser (RegisterUserDto registerDto)
+        public async Task<bool> LoginUser(LoginUserDTO loginDto)
         {
-            var user = new IdentityUser()
+             var checkUser = await  _userManager.FindByNameAsync(loginDto.UserName);
+
+            if (checkUser is null)
+            {
+                return false;
+            }
+           return await _userManager.CheckPasswordAsync(checkUser, loginDto.Password);
+        }
+
+        public async Task<bool> RegisterUser (RegisterUserDto registerDto)
+        {
+            var identityUser = new IdentityUser()
             {
                 Email = registerDto.Email,
                 UserName = registerDto.UserName
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-          
+            var result = await _userManager.CreateAsync(identityUser, registerDto.Password);
 
-           if (result.Succeeded)
-            {
-                
-                return user;
-            }
-           else
-            {
-                return null;
-            }
-          
-            
+
+            return result.Succeeded;
+      
         }
 
       

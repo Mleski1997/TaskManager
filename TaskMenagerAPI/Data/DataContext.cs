@@ -5,7 +5,7 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Data
 {
-    public class DataContext : IdentityDbContext<User>
+    public class DataContext : IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -23,13 +23,13 @@ namespace TaskMenagerAPI.Data
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
-                    
+                    Id = "1",
                     UserName = "Test",
 
                 },
                 new User
                 {
-                   
+                    Id = "2",
                     UserName = "test2"
                 }) ;
 

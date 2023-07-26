@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230726071533_dwa")]
+    partial class dwa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,11 +298,11 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "261ce4c7-f912-4474-bb8c-45a24f6cd036",
+                            ConcurrencyStamp = "7a51b392-418e-403f-97d1-a67a7ba970df",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d5551064-7435-4d75-8682-4ad048267a09",
+                            SecurityStamp = "d26df783-d331-402f-9d77-12c9c9296764",
                             TwoFactorEnabled = false,
                             UserName = "Test",
                             UserIsActive = false
@@ -308,11 +311,11 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8a99ebd2-aac8-45c7-b404-3f885fcb45ed",
+                            ConcurrencyStamp = "b6cb375b-8cf4-49b5-b123-df6903bc0f80",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1fdbb449-fccd-4ed9-adae-d4edcdf7146b",
+                            SecurityStamp = "94ab0b37-e672-4b03-a711-b03cfb960799",
                             TwoFactorEnabled = false,
                             UserName = "test2",
                             UserIsActive = false

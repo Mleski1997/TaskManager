@@ -5,6 +5,9 @@ using TaskMenagerAPI.Models;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace TaskMenagerAPI.Controllers
 {
@@ -12,39 +15,52 @@ namespace TaskMenagerAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountController(UserManager<User> userManager, IConfiguration configuration)
+        public AccountController(UserManager<IdentityUser> userManager, IConfiguration configuration, IAccountRepository accountRepository)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _accountRepository = accountRepository;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
         {
-            var userExist = await _userManager.FindByEmailAsync(registerDto.Email);
-            if (userExist != null)
+           if (await _accountRepository.RegisterUser(registerDto))
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User alreadt exists!" });
+                return Ok("Created");
             }
+           return BadRequest("Something went wrong");
+        }
 
-            User user = new User
+        [HttpPost("login")]
+        public async Task <IActionResult> LoginUser([FromBody] LoginUserDTO loginDto)
+        {
+            if(!ModelState.IsValid)
             {
-                Email = registerDto.Email,
-                UserName = registerDto.UserName,
-            };
+                return BadRequest(ModelState);
+            }
+            var result = await _accountRepository.LoginUser(loginDto);
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if(result == true)
+            {
+                var tokenString = _accountRepository.GenerateJetToken(loginDto);
+                return Ok(tokenString);
+            }
+            return BadRequest();
 
-            if (!result.Succeeded) 
-                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+        } 
 
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+
+
+
+       
         }
 
 
     }
-}
+
     
