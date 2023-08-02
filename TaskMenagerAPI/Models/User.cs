@@ -5,10 +5,7 @@ namespace TaskMenagerAPI.Models
 {
     public  class User : IdentityUser
     {
-        public bool UserIsActive { get; set; }
-       
+        public bool IsActive { get; set; }
         public ICollection<ToDo> Todoes { get; set; }
-
-
     }
 }

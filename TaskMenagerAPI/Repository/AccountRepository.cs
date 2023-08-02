@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
@@ -15,14 +16,13 @@ namespace TaskMenagerAPI.Repository
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
-        
+        private readonly DataContext _context;
 
-        public AccountRepository(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AccountRepository(UserManager<IdentityUser> userManager, IConfiguration configuration, DataContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
-
-            
+            _context = context;
         }
 
         public string GenerateJetToken(LoginUserDTO loginDto)
@@ -49,7 +49,8 @@ namespace TaskMenagerAPI.Repository
         }
 
         public async Task<bool> LoginUser(LoginUserDTO loginDto)
-        {
+        { 
+            
              var checkUser = await  _userManager.FindByNameAsync(loginDto.UserName);
 
             if (checkUser is null)
@@ -65,9 +66,9 @@ namespace TaskMenagerAPI.Repository
             {
                 Email = registerDto.Email,
                 UserName = registerDto.UserName,
-                UserIsActive = true
-                
-                
+                IsActive = true
+
+
             };
 
             var result = await _userManager.CreateAsync(User, registerDto.Password);
@@ -77,6 +78,6 @@ namespace TaskMenagerAPI.Repository
       
         }
 
-      
+       
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging.Signing;
 using System.Text;
 using System.Text.Json.Serialization;
-
+using TaskMenagerAPI.Controllers;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
@@ -32,6 +32,14 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IUserIsLogged, UserIsLogged>();
+builder.Services.AddScoped<AccountController>();
+builder.Services.AddScoped<UserWithPresenttion, UserWithPresenttion>();
+builder.Services.AddLogging(builder =>
+{
+    builder.AddConsole();
+});
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,7 +49,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentityCore<IdentityUser>(options =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 5;
     
@@ -93,3 +101,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+

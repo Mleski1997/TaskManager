@@ -5,15 +5,16 @@ namespace TaskMenagerAPI.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<User> GetUsers();
+        Task <ICollection<User>> GetUsers();
 
-        User GetUser(string userId);
-        ICollection<ToDo> GetTodoesFromTodo(int userId);
+        Task <User> GetUser(string userId);
+        Task <ICollection<ToDo>> GetTodoesFromTodo(int userId);
 
 
-      
-        bool DeleteUser(User user);
-        bool Save();
-        bool UpdateUser(string userId, UserDTO updatedUser);
+
+        Task <bool> DeleteUser(User user);
+        Task <bool> Save();
+        Task <bool> UpdateUser(string userId, UserDTO updatedUser);
+        Task<bool> UpdateActive(string userId, UserActiveDTO activeUser);
     }
 }

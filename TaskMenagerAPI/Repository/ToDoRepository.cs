@@ -17,72 +17,76 @@ namespace TaskMenagerAPI.Repository
             _context = context;
         }
 
-        public bool CreateToDo(ToDo toDo)
+        public async Task <bool> CreateToDo(ToDo toDo)
         {
             _context.Add(toDo);
-            return Save();
+            return await Save();
         }
 
-        public ICollection<ToDo> GetAllToDo()
+        public async Task<ICollection<ToDo>> GetAllToDo()
         {
 
-            return _context.ToDoes.ToList();
+            return await _context.ToDoes.ToListAsync();
             
         }
 
-        public ICollection<ToDo> GetAllToDoFromUser(string userId)
+        public async Task<ICollection<ToDo>> GetAllToDoFromUser(string userId)
         {
-            return _context.ToDoes.Where(r => r.UserId == userId).ToList();
+            return await _context.ToDoes.Where(r => r.UserId == userId).ToListAsync();
         }
-        public ICollection<ToDo> GetAllToDoByDate()
+        public async Task<ICollection<ToDo>> GetAllToDoByDate()
         {
 
-            return _context.ToDoes.OrderBy(c => c.DueDate).ToList();
-
-        }
-        public ICollection<ToDo> GetAllToDoByStatus()
-        {
-
-            return _context.ToDoes.OrderBy(c => c.Status).ToList();
+            return await _context.ToDoes.OrderBy(c => c.DueDate).ToListAsync();
 
         }
+        public async Task<ICollection<ToDo>> GetAllToDoByStatus()
+        {
 
-        public ICollection<ToDo> GetAllFilterByTitle(string title)
-        {
-            return _context.ToDoes.Where(c => c.Title.ToLower() == title.ToLower()).ToList();
-        }
-        public ICollection<ToDo> GetAllFilterByStatus(Status status)
-        {
-            return _context.ToDoes.Where(c => c.Status == status).ToList();
+            return await _context.ToDoes.OrderBy(c => c.Status).ToListAsync();
+
         }
 
-        public ToDo GetTodo(int todoId)
+        public async Task<ICollection<ToDo>> GetAllFilterByTitle(string title)
         {
-            return _context.ToDoes.Include(t => t.User).FirstOrDefault(t => t.Id == todoId);
+            return await _context.ToDoes.Where(c => c.Title.ToLower() == title.ToLower()).ToListAsync();
+        }
+        public async Task<ICollection<ToDo>> GetAllFilterByStatus(Status status)
+        {
+            return await _context.ToDoes.Where(c => c.Status == status).ToListAsync();
+        }
+
+        public async Task <ToDo> GetTodo(int todoId)
+        {
+            return await _context.ToDoes.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == todoId);
         }
     
-        public bool UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
+        public async Task <bool> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-            var editToDo = _context.ToDoes.FirstOrDefault(t => t.Id == todoId);
+            var editToDo = await _context.ToDoes.FirstOrDefaultAsync(t => t.Id == todoId);
             if (editToDo == null)
             {
                 return false;
             }
             if (Enum.TryParse<Status>(updatedToDo.Status, out Status parsedStatus))
                 editToDo.Status = parsedStatus;
-            return Save();
+                editToDo.Title = updatedToDo.Title;
+                editToDo.Description = updatedToDo.Description;
+                editToDo.DueDate = updatedToDo.DueDate;
+
+                 return await Save();
         }
 
-        public bool Save()
+        public async Task <bool> Save()
         {
-            var saved = _context.SaveChanges();
+            var saved = await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
 
-        public bool DeleteToDo(ToDo toDo)
+        public async Task<bool> DeleteToDo(ToDo toDo)
         {
             _context.Remove(toDo);
-            return Save();
+            return await Save();
         }
 
        

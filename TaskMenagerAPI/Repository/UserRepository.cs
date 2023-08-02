@@ -19,49 +19,57 @@ namespace TaskMenagerAPI.Repository
             _context = context;
             _mapper = mapper;
         }
-
-        public ICollection<User> GetUsers()
+        
+        public  async Task <ICollection<User>> GetUsers()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
 
-        public User GetUser(string userId)
+        public async Task <User> GetUser(string userId)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
-        public ICollection<ToDo> GetTodoesFromTodo(int userId)
+        public async Task <ICollection<ToDo>> GetTodoesFromTodo(int userId)
         {
-            return _context.ToDoes.Where(r => r.Id == userId).ToList();
+            return await _context.ToDoes.Where(r => r.Id == userId).ToListAsync();
         }
 
-
-
-
-
-        public bool DeleteUser(User user)
+        public async Task<bool> DeleteUser(User user)
         {
             _context.Remove(user);
 
-            return Save();
+            return await Save();
         }
 
 
-        public bool UpdateUser(string userId, UserDTO updatedUser)
+        public async Task<bool> UpdateUser(string userId, UserDTO updatedUser)
         {
-           var exist = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var exist = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (exist == null)
             {
                 return false;
             }
 
-            exist.UserName = updatedUser.UserName;
-            return Save();
+            exist.NormalizedUserName = updatedUser.UserName;
+            exist.IsActive = updatedUser.IsActive;
+            return  await Save();
         }
 
-        public bool Save()
+        public async Task<bool>UpdateActive(string userId, UserActiveDTO activeUser)
         {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            var exist = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (exist == null)
+            {
+                return false;
+            }
+            exist.IsActive = activeUser.IsActive;
+            return await Save();
+        }
+
+        public async Task <bool> Save()
+        {
+            var saved = _context.SaveChangesAsync();
+            return await saved > 0 ? true : false;
         }
     }
 }

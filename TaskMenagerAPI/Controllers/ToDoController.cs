@@ -32,15 +32,20 @@ namespace TaskMenagerAPI.Controllers
             _toDoRepository = toDoRepository;
             _userRepository = userRepository;
         }
-
+        
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
 
 
-        public IActionResult GetAllTodoes() {
-            
-            
-            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDo());
+        public async Task <IActionResult> GetAllTodoes() {
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+
+
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDo());
 
             return Ok(todoes);
         
@@ -48,31 +53,51 @@ namespace TaskMenagerAPI.Controllers
 
         [HttpGet("Sort/Date")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
-        public IActionResult GetAllTodoesByDate()
+        public async Task <IActionResult> GetAllTodoesByDate()
         {
-            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoByDate());
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoByDate());
             return Ok(todoes);
         }
 
         [HttpGet("Sort/Status")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
-        public IActionResult GetAllTodoesByStatus()
+        public async Task <IActionResult> GetAllTodoesByStatus()
         {
-            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoByStatus());
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoByStatus());
             return Ok(todoes);
         }
 
         [HttpGet("Filter/Title")]
-        public IActionResult GetAllFilterByTitle(string title)
+        public async Task <IActionResult> GetAllFilterByTitle(string title)
         {
-            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllFilterByTitle(title));
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllFilterByTitle(title));
             return Ok(todoes);
 
         }
         [HttpGet("Filter/Status")]
-        public IActionResult GetAllFilterByStatus([FromQuery] Status status)
+        public async Task <IActionResult> GetAllFilterByStatus([FromQuery] Status status)
         {
-            var todoes = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllFilterByStatus(status));
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllFilterByStatus(status));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -84,19 +109,19 @@ namespace TaskMenagerAPI.Controllers
 
         }
 
-
-
-
-
         [HttpGet("{todoId}")]
         [ProducesResponseType(200, Type = typeof(ToDo))]
         [ProducesResponseType(400)]
-        public IActionResult GetToDo(int todoId)
-        {          
-            
-                
+        public async Task<IActionResult> GetToDo(int todoId)
+        {
 
-            var todo = _mapper.Map<ToDoDTO>(_toDoRepository.GetTodo(todoId));
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+
+            var todo = _mapper.Map<ToDoDTO>(await _toDoRepository.GetTodo(todoId));
 
             
             
@@ -112,9 +137,14 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(ToDo))]
         [ProducesResponseType(400)]
 
-        public IActionResult GetAllToDoFromUser(string  userId)
+        public async Task <IActionResult> GetAllToDoFromUser(string  userId)
         {
-            var todo = _mapper.Map<List<ToDoDTO>>(_toDoRepository.GetAllToDoFromUser(userId));
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            var todo = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoFromUser(userId));
             return Ok(todo);
 
         }
@@ -129,13 +159,18 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
 
-        public IActionResult CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
+        public async Task <IActionResult> CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
         {
-            var todoes = _toDoRepository.GetAllToDo()
-                .Where(x => x.Title.Trim().ToUpper() ==  todoCreate.Title.Trim().ToUpper())
-                .FirstOrDefault();
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
 
-            if(todoes != null)
+            var todoes = await _toDoRepository.GetAllToDo();
+            var todo = todoes.FirstOrDefault(x => x.Title.Trim().ToUpper() == todoCreate.Title.Trim().ToUpper());
+
+            if (todoes != null)
             {
                 ModelState.AddModelError("", "Task altready exist");
                 return StatusCode(422, ModelState);
@@ -147,9 +182,9 @@ namespace TaskMenagerAPI.Controllers
 
             var todoMap = _mapper.Map<ToDo>(todoCreate);
             
-            todoMap.User = _userRepository.GetUser(userId);
+            todoMap.User = await _userRepository.GetUser(userId);
 
-            if(!_toDoRepository.CreateToDo(todoMap))
+            if(!await _toDoRepository.CreateToDo(todoMap))
             {
                 ModelState.AddModelError("", "Something went wrong whith saving");
                 return StatusCode(500, ModelState);
@@ -162,9 +197,14 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
+        public async Task <IActionResult> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-          bool toDoUpdated = _toDoRepository.UpdateToDo(todoId, updatedToDo);
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+            bool toDoUpdated = await _toDoRepository.UpdateToDo(todoId, updatedToDo);
 
            if(!toDoUpdated)
             {
@@ -182,15 +222,20 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
 
-        public IActionResult DeleteUser(int todoId)
+        public async Task <IActionResult> DeleteUser(int todoId)
         {
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
 
-            var todoToDelete = _toDoRepository.GetTodo(todoId);
+            var todoToDelete = await _toDoRepository.GetTodo(todoId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!_toDoRepository.DeleteToDo(todoToDelete))
+            if (!await _toDoRepository.DeleteToDo(todoToDelete))
             {
                 ModelState.AddModelError("", "Something went wront delete category");
             }
@@ -198,6 +243,13 @@ namespace TaskMenagerAPI.Controllers
             return NoContent();
 
 
+        }
+
+        private async Task<User> GetUserLoged()
+        {
+            var loggedIn = User.Identity.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loggedIn);
+            return user;
         }
     }
     

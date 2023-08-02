@@ -9,6 +9,9 @@ namespace TaskMenagerAPI.Interfaces
         string GenerateJetToken(LoginUserDTO loginDto);
         Task<bool> RegisterUser (RegisterUserDto registerDto);
         Task<bool> LoginUser (LoginUserDTO loginDto);
-      
+
+        
+
+
     }
 }

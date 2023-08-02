@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.Metrics;
+using System.Security.Claims;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
@@ -11,67 +14,97 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
+    
     public class UserController : ControllerBase
     {
+        private readonly ILogger<UserController> _logger;
+        private readonly UserWithPresenttion _userWithPresenttion;
         private readonly IUserRepository _userRepository;
+        private readonly IUserIsLogged _userLogged;
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        private readonly UserManager<IdentityUser> _user;
+        private readonly UserManager<IdentityUser> _userManager;
+        
 
-        public UserController(IUserRepository userRepository, IMapper mapper, DataContext context, UserManager<IdentityUser> user)
+        public UserController(ILogger<UserController> logger, UserWithPresenttion userWithPresenttion,  IUserRepository userRepository,IUserIsLogged userLogged, IMapper mapper, DataContext context, UserManager<IdentityUser> userManager)
         {
+            _logger = logger;
+            _userWithPresenttion = userWithPresenttion;
             _userRepository = userRepository;
+            _userLogged = userLogged;
             _mapper = mapper;
             _context = context;
-            _user = user;
+            _userManager = userManager;
+            
         }
 
-
+        
         [HttpGet(Name = "GetUsers")]
         [ProducesResponseType(200, Type = typeof(UserDTO))]
-        public IActionResult GetUsers() 
-
+        public async Task<IActionResult> GetUsers()
         {
 
-            var userDto = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers()); ;
-            
-            if(!ModelState.IsValid)
+           var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+               return BadRequest("User is disabled");
+            }
+
+            var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(userDto);
+            _logger.LogInformation($"{userDto.Count} users");
+            var users = await _userRepository.GetUsers();
+            _userWithPresenttion.Show(users);
 
+            return Ok(userDto);
+           
         }
+       
+
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(UserWithTaskDTO))]
         [ProducesResponseType(400)]
 
-        public IActionResult GetUser(string userId)
+        public async Task <IActionResult> GetUser(string userId)
         {
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
 
-              
-            var user = _mapper.Map<UserWithTaskDTO>(_userRepository.GetUser(userId));
+            var user = _mapper.Map<UserWithTaskDTO>(await _userRepository.GetUser(userId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
 
-            return Ok(user);   
-        
+            return Ok(user);
+
         }
 
 
         [HttpGet("{userId}/Todoes")]
-    
-        public IActionResult GetTodoesFromTodo(int userId)
-        {
 
-            var todoes = _mapper.Map<List<ToDoDTO>>(_userRepository.GetTodoesFromTodo(userId));
+        public async Task <IActionResult> GetTodoesFromTodo(int userId)
+        {
+            var userLogged = await GetUserLoged();
+            if (!userLogged.IsActive)
+            {
+                return BadRequest("User is disabled");
+            }
+
+            var todoes = _mapper.Map<List<ToDoDTO>>(await _userRepository.GetTodoesFromTodo(userId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -88,9 +121,10 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
 
-        public IActionResult Edit(string userId, [FromBody] UserDTO updatedUser)
+        public async Task <IActionResult> Edit(string userId, [FromBody] UserDTO updatedUser)
         {
-            bool isUpdated = _userRepository.UpdateUser(userId, updatedUser);
+          
+            bool isUpdated = await _userRepository.UpdateUser(userId, updatedUser);
 
             if (!isUpdated)
             {
@@ -100,19 +134,40 @@ namespace TaskMenagerAPI.Controllers
             return Ok("Updated");
 
         }
+
+        [HttpPut("{userId}/Active")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+
+        public async Task<IActionResult> EditUserStatus(string userId, [FromBody] UserActiveDTO activeUser) {
+
+            bool isUpdated = await _userRepository.UpdateActive(userId, activeUser);
+
+            if (!isUpdated)
+            {
+                return BadRequest("Update failded");
+            }
+            return Ok("Updated");
+
+
+
+                }
         [HttpDelete("{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
 
-        public IActionResult DeleteUser(string userId) {
+        public async Task <IActionResult> DeleteUser(string userId)
+        {
+        
 
-            var userToDelete = _userRepository.GetUser(userId);
+            var userToDelete = await _userRepository.GetUser(userId);
 
-            if(!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if(!_userRepository.DeleteUser(userToDelete))
+            if (! await _userRepository.DeleteUser(userToDelete))
             {
                 ModelState.AddModelError("", "Something went wront delete category");
             }
@@ -122,7 +177,16 @@ namespace TaskMenagerAPI.Controllers
 
 
         }
-        
+
+        private async Task <User> GetUserLoged()
+        {
+            var loggedIn = User.Identity.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loggedIn);
+            return user;
+        }
+
+
+
 
     }
 }
