@@ -161,20 +161,20 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+           // var userLogged = await GetUserLoged();
+           // if (!userLogged.IsActive)
+           // {
+           //     return BadRequest("User is disabled");
+           // }
 
-            var todoes = await _toDoRepository.GetAllToDo();
-            var todo = todoes.FirstOrDefault(x => x.Title.Trim().ToUpper() == todoCreate.Title.Trim().ToUpper());
+           // var todoes = await _toDoRepository.GetAllToDo();
+            //var todo = todoes.FirstOrDefault(x => x.Title.Trim().ToUpper() == todoCreate.Title.Trim().ToUpper());
 
-            if (todoes != null)
-            {
-                ModelState.AddModelError("", "Task altready exist");
-                return StatusCode(422, ModelState);
-            }
+           // if (todoes != null)
+           // {
+            //    ModelState.AddModelError("", "Task altready exist");
+            //    return StatusCode(422, ModelState);
+           // }
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

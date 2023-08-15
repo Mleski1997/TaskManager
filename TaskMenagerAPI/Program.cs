@@ -13,6 +13,8 @@ using TaskMenagerAPI.Interfaces;
 using TaskMenagerAPI.Models;
 using TaskMenagerAPI.Repository;
 
+var TaskMenagerAPI = "_TaskMenagerAPi";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,9 +47,9 @@ builder.Services.AddLogging(builder =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
+builder.Services.AddCors( options =>
 {
-    options.AddDefaultPolicy(
+    options.AddPolicy(name: TaskMenagerAPI,
         policy =>
         {
             policy.WithOrigins("http://localhost:3000")
@@ -93,7 +95,7 @@ builder.Services.AddAuthentication(options =>
 
 
 var app = builder.Build();
-app.UseCors();
+
 
 
 
@@ -104,10 +106,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
 
+app.UseCors(TaskMenagerAPI);
 app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthorization(); 
 
 app.MapControllers();
 
