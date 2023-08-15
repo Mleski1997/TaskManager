@@ -15,12 +15,14 @@ namespace TaskMenagerAPI.Repository
     public class AccountRepository : IAccountRepository
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly DataContext _context;
 
-        public AccountRepository(UserManager<IdentityUser> userManager, IConfiguration configuration, DataContext context)
+        public AccountRepository(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, DataContext context)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _configuration = configuration;
             _context = context;
         }
@@ -57,7 +59,12 @@ namespace TaskMenagerAPI.Repository
             {
                 return false;
             }
-           return await _userManager.CheckPasswordAsync(checkUser, loginDto.Password);
+           var result = await  _signInManager.CheckPasswordSignInAsync(checkUser, loginDto.Password, false);
+            if(!result.Succeeded)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> RegisterUser (RegisterUserDto registerDto)

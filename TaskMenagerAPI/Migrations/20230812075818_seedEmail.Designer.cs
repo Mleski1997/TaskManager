@@ -12,8 +12,8 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230801135609_active")]
-    partial class active
+    [Migration("20230812075818_seedEmail")]
+    partial class seedEmail
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,27 +298,57 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fac6c0b2-a862-4ff4-aedf-bf99d3414ec1",
+                            ConcurrencyStamp = "b14a7ffe-7dc3-42a6-95c8-31644c721fc7",
+                            Email = "Michal12op.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d9f2cdff-b8f8-45a2-81cb-5063c39e89a0",
+                            SecurityStamp = "c19824cd-0abd-4143-8c69-f769a6e6864c",
                             TwoFactorEnabled = false,
                             UserName = "Test",
-                            IsActive = false
+                            IsActive = true
                         },
                         new
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53b1520e-f22d-4e38-b677-28416ffa329f",
+                            ConcurrencyStamp = "e1e5ceaa-9f92-44df-816d-41a2913556da",
+                            Email = "Michal31vp.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d18fa7ac-db21-40ed-802a-1f7cf2b01f3e",
+                            SecurityStamp = "6d06be29-4993-45b1-9913-77bad0e96843",
                             TwoFactorEnabled = false,
                             UserName = "test2",
-                            IsActive = false
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "5df42681-cd14-4481-a57f-e1dcbdd99d26",
+                            Email = "Pioterk@ds.pl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "cb9b9fcd-1948-46ce-b5b5-394c8af61f68",
+                            TwoFactorEnabled = false,
+                            UserName = "test3",
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1b697c78-0228-47a3-bade-9157b94c0faf",
+                            Email = "test@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9b269795-b55b-4b16-9f56-cca6ed382638",
+                            TwoFactorEnabled = false,
+                            UserName = "test4",
+                            IsActive = true
                         });
                 });
 

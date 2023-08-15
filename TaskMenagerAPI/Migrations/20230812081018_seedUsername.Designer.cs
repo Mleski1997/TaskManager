@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230812081018_seedUsername")]
+    partial class seedUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,56 +298,52 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eef803b0-85b3-4682-902c-a6a34010cf7e",
+                            ConcurrencyStamp = "b5fe5cc2-86d2-4d34-bd88-39f209c4b369",
                             Email = "Michal12op.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2495ced9-2078-42aa-9b11-7c9722aa1e2f",
+                            SecurityStamp = "85fdaced-c1f0-4bc0-9a7f-4952a6e976e3",
                             TwoFactorEnabled = false,
-                            UserName = "Test1",
                             IsActive = true
                         },
                         new
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "684b0b3b-74b1-47fc-8396-abdc8188d94e",
+                            ConcurrencyStamp = "b430be6c-a438-4418-bda0-446d290366c0",
                             Email = "Michal31vp.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "db531363-19e7-419b-afdf-a6316f9e5c80",
+                            SecurityStamp = "c03cdbd3-b5d2-436f-942f-4f2b920f2553",
                             TwoFactorEnabled = false,
-                            UserName = "test2",
                             IsActive = true
                         },
                         new
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f29dc870-a6aa-4e23-9da5-0fb1434d8214",
+                            ConcurrencyStamp = "6363cebe-54af-4c19-8d14-397f495e098c",
                             Email = "Pioterk@ds.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "50c60b96-818d-4f4a-8f42-110365006c26",
+                            SecurityStamp = "fe6738f3-efcf-48fa-b38f-41b2dbd19d91",
                             TwoFactorEnabled = false,
-                            UserName = "test3",
                             IsActive = true
                         },
                         new
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0fb50468-70ee-4b25-94ad-2a668d5b0150",
+                            ConcurrencyStamp = "58ea4d5d-a3a7-4f20-b158-14c851fb3b30",
                             Email = "test@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ba89a4b7-0126-46ef-a09d-03a05ef13ef0",
+                            SecurityStamp = "3f46d870-8ed5-48a7-8293-3ad009393e3e",
                             TwoFactorEnabled = false,
-                            UserName = "test4",
                             IsActive = true
                         });
                 });

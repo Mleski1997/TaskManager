@@ -33,7 +33,7 @@ namespace TaskMenagerAPI.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserIsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -185,11 +185,11 @@ namespace TaskMenagerAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserIsActive", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1", 0, "8d81bb2d-a5ef-4e0c-8c3d-a1c5df396c68", "User", null, false, false, null, null, null, null, null, false, "7f6fb2f8-db21-4d11-9c0f-b1cbef48dda3", false, false, "Test" },
-                    { "2", 0, "fec05217-c852-44c0-9f34-8c26ff51b39b", "User", null, false, false, null, null, null, null, null, false, "bf7da99f-5e1d-4c36-90e0-96aaf64ce008", false, false, "test2" }
+                    { "1", 0, "9a75e8dc-f4e4-4c4e-95aa-ef61924e9a49", "User", null, false, false, false, null, null, null, null, null, false, "76d403d3-5acf-426e-9f90-1027da869ac4", false, "Test" },
+                    { "2", 0, "e25e5d29-ab42-4da4-a96f-347fbf07b8aa", "User", null, false, false, false, null, null, null, null, null, false, "b500efe7-b6a9-4143-a19b-cfdbee9fdfa3", false, "test2" }
                 });
 
             migrationBuilder.InsertData(

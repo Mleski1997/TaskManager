@@ -15,9 +15,12 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TaskMenagerAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
+
+ 
     {
         private readonly UserManager<IdentityUser> _userManager;
        
@@ -32,6 +35,8 @@ namespace TaskMenagerAPI.Controllers
             _accountRepository = accountRepository;
             _context = context;
         }
+
+      
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(RegisterUserDto registerDto)
@@ -69,8 +74,8 @@ namespace TaskMenagerAPI.Controllers
         {
 
             
-            var userLogged = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
-
+          /*  var userLogged = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
+            
 
             if (!userLogged.IsActive)
             {
@@ -79,7 +84,7 @@ namespace TaskMenagerAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+            } */
 
             var result = await _accountRepository.LoginUser(loginDto);
             if (result != true)

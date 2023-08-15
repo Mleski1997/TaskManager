@@ -14,7 +14,7 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     
@@ -41,20 +41,27 @@ namespace TaskMenagerAPI.Controllers
             _userManager = userManager;
             
         }
+        private async Task<User> GetUserLoged()
+        {
+            var loggedIn = User.Identity.Name;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loggedIn);
+            return user;
+        }
 
-        
-        [HttpGet(Name = "GetUsers")]
+
+
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(UserDTO))]
         public async Task<IActionResult> GetUsers()
         {
 
-           var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-               return BadRequest("User is disabled");
-            }
+        //   var userLogged = await GetUserLoged();
+          //  if (!userLogged.IsActive)
+           //{
+           //    return BadRequest("User is disabled");
+           // }
 
-            var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
+           var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
 
             if (!ModelState.IsValid)
             {
@@ -77,11 +84,12 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> GetUser(string userId)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+            //   var userLogged = await GetUserLoged();
+            //  if (!userLogged.IsActive)
+            //{
+            //    return BadRequest("User is disabled");
+            // }
+
 
             var user = _mapper.Map<UserWithTaskDTO>(await _userRepository.GetUser(userId));
 
@@ -98,11 +106,12 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> GetTodoesFromTodo(int userId)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+            //   var userLogged = await GetUserLoged();
+            //  if (!userLogged.IsActive)
+            //{
+            //    return BadRequest("User is disabled");
+            // }
+
 
             var todoes = _mapper.Map<List<ToDoDTO>>(await _userRepository.GetTodoesFromTodo(userId));
 
@@ -178,14 +187,7 @@ namespace TaskMenagerAPI.Controllers
 
         }
 
-        private async Task <User> GetUserLoged()
-        {
-            var loggedIn = User.Identity.Name;
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loggedIn);
-            return user;
-        }
-
-
+      
 
 
     }

@@ -20,9 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers().AddJsonOptions(options =>
-{ 
-options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 
@@ -45,6 +45,16 @@ builder.Services.AddLogging(builder =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -52,7 +62,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 5;
-    
+
 }).AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
@@ -77,12 +87,13 @@ builder.Services.AddAuthentication(options =>
             ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
             ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value))
-    };
+        };
     }
 );
 
 
 var app = builder.Build();
+app.UseCors();
 
 
 
@@ -101,6 +112,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-

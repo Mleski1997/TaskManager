@@ -15,7 +15,7 @@ namespace TaskMenagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+  
     
 
     public class ToDoController : Controller
@@ -38,11 +38,11 @@ namespace TaskMenagerAPI.Controllers
 
 
         public async Task <IActionResult> GetAllTodoes() {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+          //  var userLogged = await GetUserLoged();
+           // if (!userLogged.IsActive)
+          //  {
+          //      return BadRequest("User is disabled");
+           // }
 
 
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDo());

@@ -12,8 +12,8 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230726090244_init")]
-    partial class init
+    [Migration("20230812081238_seed3")]
+    partial class seed3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -288,7 +288,7 @@ namespace TaskMenagerAPI.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<bool>("UserIsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("User");
@@ -298,27 +298,57 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d81bb2d-a5ef-4e0c-8c3d-a1c5df396c68",
+                            ConcurrencyStamp = "eef803b0-85b3-4682-902c-a6a34010cf7e",
+                            Email = "Michal12op.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7f6fb2f8-db21-4d11-9c0f-b1cbef48dda3",
+                            SecurityStamp = "2495ced9-2078-42aa-9b11-7c9722aa1e2f",
                             TwoFactorEnabled = false,
-                            UserName = "Test",
-                            UserIsActive = false
+                            UserName = "Test1",
+                            IsActive = true
                         },
                         new
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fec05217-c852-44c0-9f34-8c26ff51b39b",
+                            ConcurrencyStamp = "684b0b3b-74b1-47fc-8396-abdc8188d94e",
+                            Email = "Michal31vp.pl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bf7da99f-5e1d-4c36-90e0-96aaf64ce008",
+                            SecurityStamp = "db531363-19e7-419b-afdf-a6316f9e5c80",
                             TwoFactorEnabled = false,
                             UserName = "test2",
-                            UserIsActive = false
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f29dc870-a6aa-4e23-9da5-0fb1434d8214",
+                            Email = "Pioterk@ds.pl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "50c60b96-818d-4f4a-8f42-110365006c26",
+                            TwoFactorEnabled = false,
+                            UserName = "test3",
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "0fb50468-70ee-4b25-94ad-2a668d5b0150",
+                            Email = "test@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ba89a4b7-0126-46ef-a09d-03a05ef13ef0",
+                            TwoFactorEnabled = false,
+                            UserName = "test4",
+                            IsActive = true
                         });
                 });
 

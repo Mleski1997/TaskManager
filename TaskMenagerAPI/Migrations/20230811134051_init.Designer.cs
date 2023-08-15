@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230811134051_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,57 +298,27 @@ namespace TaskMenagerAPI.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eef803b0-85b3-4682-902c-a6a34010cf7e",
-                            Email = "Michal12op.pl",
+                            ConcurrencyStamp = "9a75e8dc-f4e4-4c4e-95aa-ef61924e9a49",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2495ced9-2078-42aa-9b11-7c9722aa1e2f",
+                            SecurityStamp = "76d403d3-5acf-426e-9f90-1027da869ac4",
                             TwoFactorEnabled = false,
-                            UserName = "Test1",
-                            IsActive = true
+                            UserName = "Test",
+                            IsActive = false
                         },
                         new
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "684b0b3b-74b1-47fc-8396-abdc8188d94e",
-                            Email = "Michal31vp.pl",
+                            ConcurrencyStamp = "e25e5d29-ab42-4da4-a96f-347fbf07b8aa",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "db531363-19e7-419b-afdf-a6316f9e5c80",
+                            SecurityStamp = "b500efe7-b6a9-4143-a19b-cfdbee9fdfa3",
                             TwoFactorEnabled = false,
                             UserName = "test2",
-                            IsActive = true
-                        },
-                        new
-                        {
-                            Id = "3",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "f29dc870-a6aa-4e23-9da5-0fb1434d8214",
-                            Email = "Pioterk@ds.pl",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "50c60b96-818d-4f4a-8f42-110365006c26",
-                            TwoFactorEnabled = false,
-                            UserName = "test3",
-                            IsActive = true
-                        },
-                        new
-                        {
-                            Id = "4",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "0fb50468-70ee-4b25-94ad-2a668d5b0150",
-                            Email = "test@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "ba89a4b7-0126-46ef-a09d-03a05ef13ef0",
-                            TwoFactorEnabled = false,
-                            UserName = "test4",
-                            IsActive = true
+                            IsActive = false
                         });
                 });
 
