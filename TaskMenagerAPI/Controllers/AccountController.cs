@@ -92,10 +92,10 @@ namespace TaskMenagerAPI.Controllers
                 return BadRequest();
             }
 
-            var tokenString = _accountRepository.GenerateJetToken(loginDto);
+            var token= _accountRepository.GenerateJetToken(loginDto);
 
           
-            return Ok(new { tokenString });
+            return Ok(new { token });
 
 
         }
