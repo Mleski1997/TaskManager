@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,44 +28,18 @@ namespace TaskMenagerAPI.Repository
             _context = context;
         }
 
-        public string GenerateJetToken(LoginUserDTO loginDto)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name,loginDto.UserName)
-            };
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
-
-            var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-
-            var securityToken = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                issuer: _configuration.GetSection("Jwt:Issuer").Value,
-                audience: _configuration.GetSection("Jwt:Audience").Value,
-                signingCredentials: signingCred);
-
-            string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            return tokenString;
-        }
 
         public async Task<bool> LoginUser(LoginUserDTO loginDto)
-        { 
-            
-             var checkUser = await  _userManager.FindByNameAsync(loginDto.UserName);
+        {
 
-            if (checkUser is null)
+            var user  = await _userManager.FindByNameAsync(loginDto.UserName);
+
+            if (user is null)
             {
                 return false;
             }
-           var result = await  _signInManager.CheckPasswordSignInAsync(checkUser, loginDto.Password, false);
-            if(!result.Succeeded)
-            {
-                return false;
-            }
-            return true;
+            return await _userManager.CheckPasswordAsync(user, loginDto.Password);
         }
 
         public async Task<bool> RegisterUser (RegisterUserDto registerDto)
@@ -84,7 +59,35 @@ namespace TaskMenagerAPI.Repository
             return result.Succeeded;
       
         }
+        public string GenerateJwtToken(User user)
+        {
 
-       
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+             
+              
+            };
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+            var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+
+            var securityToken = new JwtSecurityToken(
+                issuer: _configuration["Jwt:ValidIssuer"],
+                audience: _configuration["Jwt:ValidAudience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(60),
+                signingCredentials: signingCred);
+
+            Console.WriteLine(user.Id);
+
+            var tokenString = tokenHandler.WriteToken(securityToken);
+            return tokenString;
+
+            
+        }
+
+
     }
 }

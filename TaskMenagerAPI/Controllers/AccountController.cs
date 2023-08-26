@@ -15,28 +15,23 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TaskMenagerAPI.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
-
- 
     {
         private readonly UserManager<IdentityUser> _userManager;
-       
+
         private readonly IAccountRepository _accountRepository;
-        
+
         private readonly DataContext _context;
 
-        public AccountController(UserManager<IdentityUser> userManager,  IAccountRepository accountRepository,  DataContext context
+        public AccountController(UserManager<IdentityUser> userManager, IAccountRepository accountRepository, DataContext context
             )
         {
             _userManager = userManager;
             _accountRepository = accountRepository;
             _context = context;
         }
-
-      
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(RegisterUserDto registerDto)
@@ -49,59 +44,65 @@ namespace TaskMenagerAPI.Controllers
             }
             if (registerDto == null)
             {
-                return BadRequest(ModelState);              
+                return BadRequest(ModelState);
             }
 
-           
-            var user = await  _userManager.FindByNameAsync(registerDto.UserName);
 
-            if (user != null) {
+            var user = await _userManager.FindByNameAsync(registerDto.UserName);
+
+            if (user != null)
+            {
                 ModelState.AddModelError("", "Username already exists");
                 return BadRequest(ModelState);
-            }           
-           if (!await _accountRepository.RegisterUser(registerDto))
+            }
+            if (!await _accountRepository.RegisterUser(registerDto))
             {
                 return BadRequest("Something went wrong");
-                
+
             }
             return Ok("Created");
         }
 
-        
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser(LoginUserDTO loginDto)
 
         {
 
-            
-          /*  var userLogged = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
-            
 
-            if (!userLogged.IsActive)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName );
+
+             if (user == null)
             {
-                return BadRequest("User is disabled");
+                return BadRequest("Invalid username ot password");
             }
+        //    if (!userLogged.IsActive)
+          //  {
+            //    return BadRequest("User is disabled");
+           // }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            } */
+            }
 
             var result = await _accountRepository.LoginUser(loginDto);
-            if (result != true)
+            if (result == false)
             {
                 return BadRequest();
             }
 
-            var token= _accountRepository.GenerateJetToken(loginDto);
+            var tokenString = _accountRepository.GenerateJwtToken(user);
 
           
-            return Ok(new { token });
+
+            return Ok(new 
+            { 
+                tokenString,
+                UserId = user.Id});
 
 
         }
 
-  
+
     }
 }
-
-    

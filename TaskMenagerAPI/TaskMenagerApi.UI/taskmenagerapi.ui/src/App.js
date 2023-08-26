@@ -10,20 +10,22 @@ import axios from 'axios'
 
 import { useState } from 'react'
 import SignUp from './Pages/SignUp'
+import TaskList from './Pages/TaskList'
+import ToDoListUser from './Pages/ToDoListUser'
 
 function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'))
 
 	return (
-		
-			<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-				<Routes>
-					<Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-					<Route path='/signup' element={<SignUp />} />
-					<Route path='/dashboard' element={<Dashboard />} />
-				</Routes>
-			</Layout>
-		
+		<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
+			<Routes>
+				<Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+				<Route path='/signup' element={<SignUp />} />
+				<Route path='/dashboard' element={<Dashboard />} />
+				<Route path='/tasklist' element={<TaskList />} />
+				<Route path='/todolistuser' element={<ToDoListUser />} />
+			</Routes>
+		</Layout>
 	)
 }
 

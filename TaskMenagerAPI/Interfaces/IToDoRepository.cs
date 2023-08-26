@@ -18,5 +18,6 @@ namespace TaskMenagerAPI.Interfaces
         Task <bool> UpdateToDo (int todoId, [FromBody] ToDoDTO updatedToDo);
         Task <bool> DeleteToDo(ToDo toDo);
         Task<bool> Save();
+        
     }
 }

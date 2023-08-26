@@ -29,9 +29,9 @@ namespace TaskMenagerAPI.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
-        public async Task <ICollection<ToDo>> GetTodoesFromTodo(int userId)
+        public async Task <ICollection<ToDo>> GetTodoesFromTodo(string userId)
         {
-            return await _context.ToDoes.Where(r => r.Id == userId).ToListAsync();
+            return await _context.ToDoes.Where(r => r.UserId == userId).ToListAsync();
         }
 
         public async Task<bool> DeleteUser(User user)

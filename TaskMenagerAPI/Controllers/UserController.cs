@@ -14,7 +14,7 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     
@@ -104,7 +104,7 @@ namespace TaskMenagerAPI.Controllers
 
         [HttpGet("{userId}/Todoes")]
 
-        public async Task <IActionResult> GetTodoesFromTodo(int userId)
+        public async Task <IActionResult> GetTodoesFromTodo(string userId)
         {
             //   var userLogged = await GetUserLoged();
             //  if (!userLogged.IsActive)

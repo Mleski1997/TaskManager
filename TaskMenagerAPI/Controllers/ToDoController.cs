@@ -13,6 +13,7 @@ using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
   
@@ -51,7 +52,10 @@ namespace TaskMenagerAPI.Controllers
         
         }
 
-        [HttpGet("Sort/Date")]
+       
+
+
+    [HttpGet("Sort/Date")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
         public async Task <IActionResult> GetAllTodoesByDate()
         {
@@ -140,10 +144,10 @@ namespace TaskMenagerAPI.Controllers
         public async Task <IActionResult> GetAllToDoFromUser(string  userId)
         {
             var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+         //   if (!userLogged.IsActive)
+          //  {
+          //      return BadRequest("User is disabled");
+           // }
             var todo = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoFromUser(userId));
             return Ok(todo);
 

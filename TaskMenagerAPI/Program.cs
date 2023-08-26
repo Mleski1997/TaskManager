@@ -17,6 +17,7 @@ var TaskMenagerAPI = "_TaskMenagerAPi";
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 
 
@@ -77,21 +78,19 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateActor = true,
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            RequireExpirationTime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
-            ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value))
-        };
-    }
-);
+   .AddJwtBearer(options =>
+   {
+       options.SaveToken = true;
+       options.RequireHttpsMetadata = false;
+       options.TokenValidationParameters = new TokenValidationParameters()
+       {
+           ValidateIssuer = true,
+           ValidateAudience = true,
+           ValidAudience = builder.Configuration["JWT:ValidAudience"],
+           ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+       };
+   });
 
 
 var app = builder.Build();

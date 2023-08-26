@@ -8,7 +8,7 @@ namespace TaskMenagerAPI.Interfaces
         Task <ICollection<User>> GetUsers();
 
         Task <User> GetUser(string userId);
-        Task <ICollection<ToDo>> GetTodoesFromTodo(int userId);
+        Task <ICollection<ToDo>> GetTodoesFromTodo(string userId);
 
 
 

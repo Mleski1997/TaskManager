@@ -30,10 +30,31 @@ namespace TaskMenagerAPI.Repository
             
         }
 
-        public async Task<ICollection<ToDo>> GetAllToDoFromUser(string userId)
+        public async Task<ICollection<ToDo>> GetAllToDoFromUser(string username)
         {
-            return await _context.ToDoes.Where(r => r.UserId == userId).ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+
+            if (user == null)
+            {
+                return null; // lub pusty IEnumerable w zależności od wymagań
+            }
+
+            var todoes = await _context.ToDoes
+                .Where(todo => todo.UserId == user.Id)
+                .ToListAsync();
+
+            return (ICollection<ToDo>)todoes.Select(todo => new ToDoDTO
+            {
+                Id = todo.Id,
+                Title = todo.Title,
+                Description = todo.Description,
+                Status = todo.Status,
+                DueDate = todo.DueDate,
+                UserId = todo.UserId
+            }).ToList();
         }
+
+   
         public async Task<ICollection<ToDo>> GetAllToDoByDate()
         {
 
@@ -68,8 +89,8 @@ namespace TaskMenagerAPI.Repository
             {
                 return false;
             }
-            if (Enum.TryParse<Status>(updatedToDo.Status, out Status parsedStatus))
-                editToDo.Status = parsedStatus;
+            
+                editToDo.Status = (Status)updatedToDo.Status;
                 editToDo.Title = updatedToDo.Title;
                 editToDo.Description = updatedToDo.Description;
                 editToDo.DueDate = updatedToDo.DueDate;

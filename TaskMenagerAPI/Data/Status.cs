@@ -2,9 +2,9 @@
 {
     public enum Status
     {
-        Success,
-        InProgress,
-        Blocked,
+        Success ,
+        InProgress, 
+        Blocked 
 
     }
 }
