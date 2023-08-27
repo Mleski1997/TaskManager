@@ -1,10 +1,13 @@
 import axios from 'axios'
+
 import { setHours } from 'date-fns'
 import React, { useState, useEffect, useRef } from 'react'
-import Table from 'react-bootstrap/Table'
+
 import format from 'date-fns/format'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import Table from 'react-bootstrap/Table'
+import './css/ToDoListUser.css'
 import { json } from 'react-router-dom'
 
 function TaskList() {
@@ -77,105 +80,101 @@ function TaskList() {
 
 		localStorage.setItem('completedTasks', JSON.stringify(updatedCompletedTask))
 
-        const taskIndex = todo.findIndex(task => task.id === todoId);
-    if (taskIndex === -1) {
-        return; // T
-    }
+		const taskIndex = todo.findIndex(task => task.id === todoId)
+		if (taskIndex === -1) {
+			return // T
+		}
 
-        const updatedTodo = [...todo];
-        updatedTodo[taskIndex].status = statusEnum.Success;
-    
+		const updatedTodo = [...todo]
+		updatedTodo[taskIndex].status = statusEnum.Success
 
-        axios.put(`https://localhost:7219/api/ToDo/${todoId}`, updatedTodo[taskIndex])
-        .then(response => {
-            setTodo(updatedTodo);
-        })
-        .catch(error => {
-            console.error('Error updating task:', error);
-        });
+		axios
+			.put(`https://localhost:7219/api/ToDo/${todoId}`, updatedTodo[taskIndex])
+			.then(response => {
+				setTodo(updatedTodo)
+			})
+			.catch(error => {
+				console.error('Error updating task:', error)
+			})
 	}
 
-    const handleKeyDown = event => {
+	const handleKeyDown = event => {
 		if (event.key === 'Enter') {
 			event.preventDefault()
 			addTodo()
 		}
-    }
-
-    
-
-
-        
-    
+	}
 
 	return (
 		<>
-			<Form>
-				<Form.Group className='mb-3' controlId='title'>
-					<Form.Label>Title</Form.Label>
-					<Form.Control type='title' placeholder='title' ref={title} />
-				</Form.Group>
+			<section id='todosection'>
+				<div className='todo-img'>
+					<div className='todo-img--shadow'></div>
+				</div>
+				<Form className='form-box'>
+					<Form.Group className='mb-3' controlId='title'>
+						<Form.Label>Title</Form.Label>
+						<Form.Control type='title' placeholder='title' ref={title} />
+					</Form.Group>
 
-				<Form.Group className='mb-3' controlId='description'>
-					<Form.Label>Description</Form.Label>
-					<Form.Control type='description' placeholder='description' ref={description} />
-				</Form.Group>
-				<Form.Group controlId='status'>
-					<Form.Label>Status</Form.Label>
-					<Form.Select ref={status}>
-						<option value={statusEnum.InProgress}>InProgress</option>
-						<option value={statusEnum.Blocked}>Blocked</option>
-					</Form.Select>
-				</Form.Group>
+					<Form.Group className='mb-3' controlId='description'>
+						<Form.Label>Description</Form.Label>
+						<Form.Control type='description' placeholder='description' ref={description} />
+					</Form.Group>
+					<Form.Group controlId='status'>
+						<Form.Label>Status</Form.Label>
+						<Form.Select ref={status}>
+							<option value={statusEnum.InProgress}>InProgress</option>
+							<option value={statusEnum.Blocked}>Blocked</option>
+						</Form.Select>
+					</Form.Group>
 
-				<Form.Group className='mb-3' controlId='duedate'>
-					<Form.Label>Date</Form.Label>
-					<Form.Control type='date' placeholder='description' ref={dueDate} />
-				</Form.Group>
+					<Form.Group className='mb-3' controlId='duedate'>
+						<Form.Label>Date</Form.Label>
+						<Form.Control type='date' placeholder='description' ref={dueDate} />
+					</Form.Group>
 
-				<Button variant='primary' type='submit' onClick={addTodo} onKeyDown={handleKeyDown}>
-					Submit
-				</Button>
-			</Form>
+					<Button variant='primary' type='submit' onClick={addTodo} onKeyDown={handleKeyDown}>
+						Submit
+					</Button>
+				</Form>
 
-			<h2>Task List</h2>
-
-            {todo.length === 0 ? (
-                <p>Add new task...</p>
-            ) : (
-			<Table responsive>
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Title</th>
-						<th>Description</th>
-						<th>Status</th>
-						<th>Due Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					{todo.map((todo, index) => (
-						<tr key={todo.id}>
-							<td>{index + 1}</td>
-							<td>{completed.includes(todo.id) ? <s>{todo.title}</s> : todo.title}</td>
-							<td>{completed.includes(todo.id) ? <s>{todo.description}</s> : todo.description}</td>
-							<td>{todo.status}</td>
-							<td>{format(new Date(todo.dueDate), 'dd/MM/yyyy')}</td>
-							<td>
-								<Button variant='success' onClick={() => successTodo(todo.id)}>
-									Success
-								</Button>
-								<Button variant='warning'>Edit</Button>{' '}
-								<Button variant='danger' onClick={() => deleteTodo(todo.id)}>
-									Delete
-								</Button>
-							</td>
-						</tr>
-					))}
-				</tbody>
-            
-			</Table>
-            )}
+				{todo.length === 0 ? (
+					<p>Add new task...</p>
+				) : (
+					<Table responsive  hover className="transparent-table">
+						<thead>
+							<tr className='info-box'>
+								<th>Id</th>
+								<th>Title</th>
+								<th>Description</th>
+								<th>Status</th>
+								<th>Due Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							{todo.map((todo, index) => (
+								<tr key={todo.id}>
+									<td>{index + 1}</td>
+									<td>{completed.includes(todo.id) ? <s>{todo.title}</s> : todo.title}</td>
+									<td>{completed.includes(todo.id) ? <s>{todo.description}</s> : todo.description}</td>
+									<td>{todo.status}</td>
+									<td>{format(new Date(todo.dueDate), 'dd/MM/yyyy')}</td>
+									<td>
+										<Button variant='success' onClick={() => successTodo(todo.id)}>
+											Success
+										</Button>
+										<Button variant='warning'>Edit</Button>{' '}
+										<Button variant='danger' onClick={() => deleteTodo(todo.id)}>
+											Delete
+										</Button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</Table>
+				)}
+			</section>
 		</>
 	)
 }
