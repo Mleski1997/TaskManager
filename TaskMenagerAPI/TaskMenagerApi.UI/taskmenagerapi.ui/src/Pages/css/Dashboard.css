@@ -1,0 +1,45 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+#main {
+    position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    height: 100vh; 
+    width: 100vw; 
+}
+
+.hero-img {
+    position: relative;
+    background-image: url('../img/notes.jpg');
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.hero-shadow {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(1, 1, 1, 0.8);
+    z-index: 0;
+}
+
+.box-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 2;
+
+}

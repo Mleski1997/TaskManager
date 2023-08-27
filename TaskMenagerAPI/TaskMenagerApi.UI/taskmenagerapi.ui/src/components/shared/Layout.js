@@ -1,3 +1,4 @@
+import '../shared/Layout.css'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -17,37 +18,34 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 		navigate('/login')
 		console.log('Logout success')
 	}
-  
 
 	return (
 		<>
-			<Navbar bg='dark' variant='dark'>
+			<Navbar bg='dark' variant='dark' className='fixed-top'>
 				<Container>
 					<Navbar.Brand href='#home'>TaskManagerAPI</Navbar.Brand>
-					<Nav className='me-auto'>
-						<Nav.Link href='#home'>Home</Nav.Link>
-						
-					</Nav>
 
 					{isAuthenticated ? (
-						<Button variant='primary' onClick={handleLogout}>
+						<Button variant='outline-light' onClick={handleLogout}>
 							Logout
 						</Button>
 					) : (
 						<>
-							<Button as={Link} to='/login' variant='primary'>
+							<Nav className='me-auto'>
+								<Nav.Link href='/'>Home</Nav.Link>
+							</Nav>
+							<Button as={Link} to='/login' variant='outline-light' className='m-2 BtnNav'>
 								Login
 							</Button>
-							<Button as={Link} to='/signup' variant='primary'>
+							<Button as={Link} to='/signup' variant='outline-light' className='BtnNav'>
 								SignUp
 							</Button>
 						</>
 					)}
 				</Container>
 			</Navbar>
-			<br />
 
-			<Container>{children}</Container>
+			{children}
 		</>
 	)
 }

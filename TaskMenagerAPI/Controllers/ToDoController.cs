@@ -203,11 +203,11 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(404)]
         public async Task <IActionResult> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+         //   var userLogged = await GetUserLoged();
+    //        if (!userLogged.IsActive)
+      //      {
+        ///        return BadRequest("User is disabled");
+         //   }
             bool toDoUpdated = await _toDoRepository.UpdateToDo(todoId, updatedToDo);
 
            if(!toDoUpdated)
@@ -229,10 +229,10 @@ namespace TaskMenagerAPI.Controllers
         public async Task <IActionResult> DeleteUser(int todoId)
         {
             var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+         //   if (!userLogged.IsActive)
+           // {
+           //     return BadRequest("User is disabled");
+           // }
 
             var todoToDelete = await _toDoRepository.GetTodo(todoId);
 

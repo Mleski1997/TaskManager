@@ -5,13 +5,14 @@ import Table from 'react-bootstrap/Table'
 import format from 'date-fns/format'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import { json } from 'react-router-dom'
 
 function TaskList() {
-	const [tasks, setTasks] = useState([])
+	const [todo, setTodo] = useState([])
 	const token = localStorage.getItem('token')
 	const userId = localStorage.getItem('userId')
 
-	const [taskCount, setTaskCount] = useState(0)
+	const [completed, setCompleted] = useState([])
 
 	const title = useRef('')
 	const description = useRef('')
@@ -34,7 +35,10 @@ function TaskList() {
 				})
 
 				if (response.status === 200) {
-					setTasks(response.data)
+					setTodo(response.data)
+
+					const completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || []
+					setCompleted(completedTasks)
 				} else {
 					console.error('Failed to fetch tasks')
 				}
@@ -57,10 +61,52 @@ function TaskList() {
 		}
 
 		axios.post(`https://localhost:7219/api/ToDo?userId=${userId}`, payload).then(response => {
-			setTaskCount(taskCount + 1)
-			setTasks([...tasks, response.data])
+			setTodo([...todo, response.data])
 		})
 	}
+
+	const deleteTodo = todoId => {
+		axios.delete(`https://localhost:7219/api/ToDo/${todoId}`)
+		const updatedTasks = todo.filter(todo => todo.id !== todoId)
+		setTodo(updatedTasks)
+	}
+
+	const successTodo = todoId => {
+		const updatedCompletedTask = [...completed, todoId]
+		setCompleted(updatedCompletedTask)
+
+		localStorage.setItem('completedTasks', JSON.stringify(updatedCompletedTask))
+
+        const taskIndex = todo.findIndex(task => task.id === todoId);
+    if (taskIndex === -1) {
+        return; // T
+    }
+
+        const updatedTodo = [...todo];
+        updatedTodo[taskIndex].status = statusEnum.Success;
+    
+
+        axios.put(`https://localhost:7219/api/ToDo/${todoId}`, updatedTodo[taskIndex])
+        .then(response => {
+            setTodo(updatedTodo);
+        })
+        .catch(error => {
+            console.error('Error updating task:', error);
+        });
+	}
+
+    const handleKeyDown = event => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			addTodo()
+		}
+    }
+
+    
+
+
+        
+    
 
 	return (
 		<>
@@ -77,7 +123,6 @@ function TaskList() {
 				<Form.Group controlId='status'>
 					<Form.Label>Status</Form.Label>
 					<Form.Select ref={status}>
-						<option value={statusEnum.Success}>Success</option>
 						<option value={statusEnum.InProgress}>InProgress</option>
 						<option value={statusEnum.Blocked}>Blocked</option>
 					</Form.Select>
@@ -88,12 +133,16 @@ function TaskList() {
 					<Form.Control type='date' placeholder='description' ref={dueDate} />
 				</Form.Group>
 
-				<Button variant='primary' type='submit' onClick={addTodo}>
+				<Button variant='primary' type='submit' onClick={addTodo} onKeyDown={handleKeyDown}>
 					Submit
 				</Button>
 			</Form>
 
 			<h2>Task List</h2>
+
+            {todo.length === 0 ? (
+                <p>Add new task...</p>
+            ) : (
 			<Table responsive>
 				<thead>
 					<tr>
@@ -105,21 +154,28 @@ function TaskList() {
 					</tr>
 				</thead>
 				<tbody>
-					{tasks.map(tasks => (
-						<tr key={tasks.id}>
-							<td>{taskCount}</td>
-							<td>{tasks.title}</td>
-							<td>{tasks.description}</td>
-							<td>{tasks.status}</td>
-							<td>{format(new Date(tasks.dueDate), 'dd/MM/yyyy')}</td>
+					{todo.map((todo, index) => (
+						<tr key={todo.id}>
+							<td>{index + 1}</td>
+							<td>{completed.includes(todo.id) ? <s>{todo.title}</s> : todo.title}</td>
+							<td>{completed.includes(todo.id) ? <s>{todo.description}</s> : todo.description}</td>
+							<td>{todo.status}</td>
+							<td>{format(new Date(todo.dueDate), 'dd/MM/yyyy')}</td>
 							<td>
-								<Button variant='success'>Success</Button> <Button variant='warning'>Edit</Button>{' '}
-								<Button variant='danger'>Delete</Button>
+								<Button variant='success' onClick={() => successTodo(todo.id)}>
+									Success
+								</Button>
+								<Button variant='warning'>Edit</Button>{' '}
+								<Button variant='danger' onClick={() => deleteTodo(todo.id)}>
+									Delete
+								</Button>
 							</td>
 						</tr>
 					))}
 				</tbody>
+            
 			</Table>
+            )}
 		</>
 	)
 }

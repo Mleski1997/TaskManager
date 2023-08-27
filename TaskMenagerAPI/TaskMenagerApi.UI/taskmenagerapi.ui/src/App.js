@@ -3,7 +3,7 @@ import './App.css'
 import Layout from './components/shared/Layout'
 import GetAllTodoes from './Pages/Todo'
 import { Route, Routes, Router } from 'react-router-dom'
-import Dashboard from './Dashboard/Dashboard'
+import Dashboard from './Pages/Dashboard'
 import Register from './Pages/SignUp'
 import Login from './Pages/Login'
 import axios from 'axios'
@@ -20,8 +20,8 @@ function App() {
 		<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
 			<Routes>
 				<Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+				<Route path='/' element={<Dashboard />} />
 				<Route path='/signup' element={<SignUp />} />
-				<Route path='/dashboard' element={<Dashboard />} />
 				<Route path='/tasklist' element={<TaskList />} />
 				<Route path='/todolistuser' element={<ToDoListUser />} />
 			</Routes>

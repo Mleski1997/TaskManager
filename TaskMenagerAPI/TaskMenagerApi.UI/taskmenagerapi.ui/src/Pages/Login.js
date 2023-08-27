@@ -1,7 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import axios from 'axios'
+import './css/Login.css'
 import { id } from 'date-fns/locale'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/esm/Button'
 
 const Login = ({ setIsAuthenticated }) => {
 	const [username, setUsername] = useState('')
@@ -16,10 +19,7 @@ const Login = ({ setIsAuthenticated }) => {
 			if (response.status === 200) {
 				const { tokenString, userId } = response.data
 				localStorage.setItem('token', tokenString)
-				console.log('token', tokenString)
 				localStorage.setItem('userId', userId)
-				console.log('userId', userId)
-				console.log(response.data)
 
 				setIsAuthenticated(true)
 				navigate('/todolistuser')
@@ -31,13 +31,45 @@ const Login = ({ setIsAuthenticated }) => {
 		}
 	}
 
+	const handleKeyDown = event => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			handleLogin()
+		}
+	}
+
 	return (
-		<div>
-			<h2>Login</h2>
-			<input type='text' placeholder='Username' value={username} onChange={e => setUsername(e.target.value)} />
-			<input type='password' placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} />
-			<button onClick={handleLogin}>Login</button>
-		</div>
+		<section id='login'>
+			<div className='login-container'>
+				<Form className='login-form'>
+					<Form.Group className='mb-3' controlId='Username'>
+						<Form.Label>Username</Form.Label>
+						<Form.Control
+							className='custom-form-control'
+							type='string'
+							placeholder='Username'
+							value={username}
+							onChange={e => setUsername(e.target.value)}
+						/>
+					</Form.Group>
+					<Form.Group className='mb-3' controlId='title'>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							className='custom-form-control'
+							type='password'
+							placeholder='Password'
+							onKeyDown={handleKeyDown}
+							value={password}
+							onChange={e => setPassword(e.target.value)}
+						/>
+						<div className='bot'></div>
+					</Form.Group>
+					<Button className='BtnLogin' variant='outline-light' onClick={handleLogin}>
+						Login
+					</Button>{' '}
+				</Form>
+			</div>
+		</section>
 	)
 }
 

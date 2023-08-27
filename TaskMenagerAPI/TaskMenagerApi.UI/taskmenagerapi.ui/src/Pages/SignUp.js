@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import './css/SignUp.css'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { useNavigate } from 'react-router-dom'
 
 import axios from 'axios'
 
@@ -8,6 +10,8 @@ function SignUp() {
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+
+	const navigate = useNavigate()
 
 	const handleSignUp = async () => {
 		try {
@@ -19,6 +23,7 @@ function SignUp() {
 
 			if (response.status === 200) {
 				console.log('Registraion successful')
+				navigate('/login')
 			} else {
 				console.error('Registtraion failded')
 			}
@@ -26,17 +31,52 @@ function SignUp() {
 			console.error('error', error)
 		}
 	}
+	const handleKeyDown = event => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			handleSignUp()
+		}
+	}
 
 	return (
 		<>
-			<div>
-				<h2>SignUp</h2>
-				<input type='text' placeholder='username' value={username} onChange={e => setUsername(e.target.value)} />
-				<input type='email' placeholder='email' value={email} onChange={e => setEmail(e.target.value)} />
-				<input type='password' placeholder='password' value={password} onChange={e => setPassword(e.target.value)} />
-
-				<button onClick={handleSignUp}>SignUp</button>
-			</div>
+			<section id='register'>
+				<div className='register-container'>
+					<Form className='register-form'>
+						<Form.Group className='mb-3' controlId='Username'>
+							<Form.Label>Username</Form.Label>
+							<Form.Control
+								className='custom-form-control'
+								type='string'
+								placeholder='Username'
+								value={username}
+								onChange={e => setUsername(e.target.value)}></Form.Control>
+						</Form.Group>
+						<Form.Group className='mb-3' controlId='Email'>
+							<Form.Label>Email</Form.Label>
+							<Form.Control
+								className='custom-form-control'
+								type='email'
+								placeholder='Email'
+								value={email}
+								onChange={e => setEmail(e.target.value)}></Form.Control>
+						</Form.Group>
+						<Form.Group className='mb-3' controlId='password'>
+							<Form.Label>Password</Form.Label>
+							<Form.Control
+								className='custom-form-control'
+								type='password'
+								placeholder='password'
+								onKeyDown={handleKeyDown}
+								value={password}
+								onChange={e => setPassword(e.target.value)}></Form.Control>
+						</Form.Group>
+						<Button className='BtnLogin' variant='outline-light' onClick={handleSignUp}>
+							Register
+						</Button>{' '}
+					</Form>
+				</div>
+			</section>
 		</>
 	)
 }
