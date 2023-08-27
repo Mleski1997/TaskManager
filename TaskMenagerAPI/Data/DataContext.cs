@@ -20,7 +20,7 @@ namespace TaskMenagerAPI.Data
             base.OnModelCreating(modelBuilder);
 
 
-            modelBuilder.Entity<User>().HasData(
+     /*       modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = "1",
@@ -74,7 +74,7 @@ namespace TaskMenagerAPI.Data
                     Status = Status.Blocked,
                     DueDate = new DateTime(2024, 01, 01)
                 }
-                );
+                );  */
 
 
             modelBuilder.Entity<ToDo>()

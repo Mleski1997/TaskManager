@@ -22,7 +22,7 @@ const Login = ({ setIsAuthenticated }) => {
 				console.log(response.data)
 
 				setIsAuthenticated(true)
-				navigate('/dashboard')
+				navigate('/todolistuser')
 			} else {
 				console.error('Login failed')
 			}

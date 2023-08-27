@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskMenagerAPI.Data;
 
@@ -11,9 +12,11 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230827114000_user")]
+    partial class user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,6 +262,26 @@ namespace TaskMenagerAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ToDoes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Test",
+                            DueDate = new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 0,
+                            Title = "Test",
+                            UserId = "2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Test2",
+                            DueDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            Title = "Test2",
+                            UserId = "2"
+                        });
                 });
 
             modelBuilder.Entity("TaskMenagerAPI.Models.User", b =>
@@ -269,6 +292,64 @@ namespace TaskMenagerAPI.Migrations
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6f88fc58-0f43-4988-a37d-cce71c8dd4fc",
+                            Email = "Michal12op.pl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "576355c1-64a7-4185-9d46-c3a980da60f6",
+                            TwoFactorEnabled = false,
+                            UserName = "Test1",
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b3aee494-7e0d-4a67-8c52-3e934896aa2b",
+                            Email = "Michal31vp.pl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "16b64bdf-7592-4d19-8e4a-11210013d096",
+                            TwoFactorEnabled = false,
+                            UserName = "test2",
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b56a46e6-8d8f-4ef9-b30f-46eb4acc43a0",
+                            Email = "Pioterk@ds.pl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a21dd19e-58c7-4c03-9352-d26dde7713ee",
+                            TwoFactorEnabled = false,
+                            UserName = "test3",
+                            IsActive = true
+                        },
+                        new
+                        {
+                            Id = "4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a2e24b2c-1dc7-4c07-ae56-aeaeded39e38",
+                            Email = "test@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b46da866-e573-499c-b886-8cf741df7dfd",
+                            TwoFactorEnabled = false,
+                            UserName = "test4",
+                            IsActive = true
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
