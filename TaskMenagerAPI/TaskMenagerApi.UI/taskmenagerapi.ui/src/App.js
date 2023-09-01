@@ -19,7 +19,7 @@ function App() {
 	return (
 		<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
 			<Routes>
-				<Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+				<Route path='/' element={<Dashboard setIsAuthenticated={setIsAuthenticated} />} />
 				<Route path='/' element={<Dashboard />} />
 				<Route path='/signup' element={<SignUp />} />
 				<Route path='/tasklist' element={<TaskList />} />

@@ -15,7 +15,7 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 	const handleLogout = () => {
 		localStorage.removeItem('token')
 		setIsAuthenticated(false)
-		navigate('/login')
+		navigate('/')
 		console.log('Logout success')
 	}
 
@@ -34,12 +34,6 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 							<Nav className='me-auto'>
 								<Nav.Link href='/'>Home</Nav.Link>
 							</Nav>
-							<Button as={Link} to='/login' variant='outline-light' className='m-2 BtnNav'>
-								Login
-							</Button>
-							<Button as={Link} to='/signup' variant='outline-light' className='BtnNav'>
-								SignUp
-							</Button>
 						</>
 					)}
 				</Container>
