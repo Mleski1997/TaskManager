@@ -17,8 +17,8 @@ namespace TaskMenagerAPI.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    
-    
+
+
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -28,9 +28,9 @@ namespace TaskMenagerAPI.Controllers
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        
 
-        public UserController(ILogger<UserController> logger, UserWithPresenttion userWithPresenttion,  IUserRepository userRepository,IUserIsLogged userLogged, IMapper mapper, DataContext context, UserManager<IdentityUser> userManager)
+
+        public UserController(ILogger<UserController> logger, UserWithPresenttion userWithPresenttion, IUserRepository userRepository, IUserIsLogged userLogged, IMapper mapper, DataContext context, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _userWithPresenttion = userWithPresenttion;
@@ -39,7 +39,7 @@ namespace TaskMenagerAPI.Controllers
             _mapper = mapper;
             _context = context;
             _userManager = userManager;
-            
+
         }
         private async Task<User> GetUserLoged()
         {
@@ -55,13 +55,13 @@ namespace TaskMenagerAPI.Controllers
         public async Task<IActionResult> GetUsers()
         {
 
-        //   var userLogged = await GetUserLoged();
-          //  if (!userLogged.IsActive)
-           //{
-           //    return BadRequest("User is disabled");
-           // }
+            //   var userLogged = await GetUserLoged();
+            //  if (!userLogged.IsActive)
+            //{
+            //    return BadRequest("User is disabled");
+            // }
 
-           var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
+            var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
 
             if (!ModelState.IsValid)
             {
@@ -73,16 +73,16 @@ namespace TaskMenagerAPI.Controllers
             _userWithPresenttion.Show(users);
 
             return Ok(userDto);
-           
+
         }
-       
+
 
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(UserWithTaskDTO))]
         [ProducesResponseType(400)]
 
-        public async Task <IActionResult> GetUser(string userId)
+        public async Task<IActionResult> GetUser(string userId)
         {
             //   var userLogged = await GetUserLoged();
             //  if (!userLogged.IsActive)
@@ -104,7 +104,7 @@ namespace TaskMenagerAPI.Controllers
 
         [HttpGet("{userId}/Todoes")]
 
-        public async Task <IActionResult> GetTodoesFromTodo(string userId)
+        public async Task<IActionResult> GetTodoesFromTodo(string userId)
         {
             //   var userLogged = await GetUserLoged();
             //  if (!userLogged.IsActive)
@@ -122,6 +122,9 @@ namespace TaskMenagerAPI.Controllers
 
 
         }
+
+
+
 
 
 

@@ -34,6 +34,7 @@ namespace TaskMenagerAPI.Repository
             return await _context.ToDoes.Where(r => r.UserId == userId).ToListAsync();
         }
 
+  
         public async Task<bool> DeleteUser(User user)
         {
             _context.Remove(user);
@@ -71,5 +72,7 @@ namespace TaskMenagerAPI.Repository
             var saved = _context.SaveChangesAsync();
             return await saved > 0 ? true : false;
         }
+
+ 
     }
 }

@@ -23,7 +23,7 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 		<>
 			<Navbar bg='dark' variant='dark' className='fixed-top'>
 				<Container>
-					<Navbar.Brand href='#home'>TaskManagerAPI</Navbar.Brand>
+					<Navbar.Brand href='#home'>TaskManager</Navbar.Brand>
 
 					{isAuthenticated ? (
 						<Button variant='outline-light' onClick={handleLogout}>

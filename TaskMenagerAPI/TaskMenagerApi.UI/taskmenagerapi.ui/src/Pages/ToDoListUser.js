@@ -9,11 +9,15 @@ import Form from 'react-bootstrap/Form'
 import Table from 'react-bootstrap/Table'
 import './css/ToDoListUser.css'
 import { json } from 'react-router-dom'
+import Dropdown from 'react-bootstrap/Dropdown'
+import Container from 'react-bootstrap/esm/Container'
 
 function TaskList() {
 	const [todo, setTodo] = useState([])
+	const [orginalTodo, setOrginalTodo] = useState([])
 	const token = localStorage.getItem('token')
 	const userId = localStorage.getItem('userId')
+	const [data, setData] = useState([])
 
 	const [completed, setCompleted] = useState([])
 
@@ -31,6 +35,7 @@ function TaskList() {
 	useEffect(() => {
 		const fetchTasks = async () => {
 			try {
+				const userId = localStorage.getItem('userId')
 				const response = await axios.get(`https://localhost:7219/api/User/${userId}/Todoes`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -38,7 +43,9 @@ function TaskList() {
 				})
 
 				if (response.status === 200) {
-					setTodo(response.data)
+					const todoItems = response.data
+					setTodo(todoItems)
+					setOrginalTodo(todoItems)
 
 					const completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || []
 					setCompleted(completedTasks)
@@ -98,6 +105,26 @@ function TaskList() {
 			})
 	}
 
+	const sortByDate = () => {
+		const sortedTodoItems = [...todo]
+		sortedTodoItems.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+
+		setTodo(sortedTodoItems)
+	}
+
+	const sortByStatus = () => {
+		const sortedTodoItems = [...todo];
+
+		sortedTodoItems.sort((a,b) => {
+			if(a.status > b.status) return 1;
+			if(a.status < b.status) return -1;
+			return 0;
+		})
+
+		setTodo(sortedTodoItems)
+	
+	}
+
 	const handleKeyDown = event => {
 		if (event.key === 'Enter') {
 			event.preventDefault()
@@ -111,6 +138,7 @@ function TaskList() {
 				<div className='todo-img'>
 					<div className='todo-img--shadow'></div>
 				</div>
+
 				<Form className='form-box'>
 					<Form.Group className='mb-3' controlId='title'>
 						<Form.Label>Title</Form.Label>
@@ -119,7 +147,7 @@ function TaskList() {
 
 					<Form.Group className='mb-3' controlId='description'>
 						<Form.Label>Description</Form.Label>
-						<Form.Control type='description' placeholder='description' ref={description} />
+						<Form.Control as='textarea' rows={3} placeholder='description' ref={description} />
 					</Form.Group>
 					<Form.Group controlId='status'>
 						<Form.Label>Status</Form.Label>
@@ -134,46 +162,72 @@ function TaskList() {
 						<Form.Control type='date' placeholder='description' ref={dueDate} />
 					</Form.Group>
 
-					<Button variant='primary' type='submit' onClick={addTodo} onKeyDown={handleKeyDown}>
+					<Button
+						variant='outline-light'
+						className='BtnSubmit'
+						type='submit'
+						onClick={addTodo}
+						onKeyDown={handleKeyDown}>
 						Submit
 					</Button>
-				</Form>
 
-				{todo.length === 0 ? (
-					<p>Add new task...</p>
-				) : (
-					<Table responsive  hover className="transparent-table">
-						<thead>
-							<tr className='info-box'>
-								<th>Id</th>
-								<th>Title</th>
-								<th>Description</th>
-								<th>Status</th>
-								<th>Due Date</th>
-							</tr>
-						</thead>
-						<tbody>
-							{todo.map((todo, index) => (
-								<tr key={todo.id}>
-									<td>{index + 1}</td>
-									<td>{completed.includes(todo.id) ? <s>{todo.title}</s> : todo.title}</td>
-									<td>{completed.includes(todo.id) ? <s>{todo.description}</s> : todo.description}</td>
-									<td>{todo.status}</td>
-									<td>{format(new Date(todo.dueDate), 'dd/MM/yyyy')}</td>
-									<td>
-										<Button variant='success' onClick={() => successTodo(todo.id)}>
-											Success
-										</Button>
-										<Button variant='warning'>Edit</Button>{' '}
-										<Button variant='danger' onClick={() => deleteTodo(todo.id)}>
-											Delete
-										</Button>
-									</td>
+					<Dropdown>
+						<Dropdown.Toggle variant='success' id='dropdown-basic'>
+							Sort
+						</Dropdown.Toggle>
+
+						<Dropdown.Menu>
+							<Dropdown.Item href='#/action-1' onClick={sortByDate}>
+								Date
+							</Dropdown.Item>
+							<Dropdown.Item href='#/action-2' onClick={sortByStatus}>
+								Status
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+				</Form>
+				<Container>
+					{todo.length === 0 ? (
+						<p>Add new task...</p>
+					) : (
+						<Table responsive hover borderless className='transparent-table'>
+							<thead>
+								<tr className='info-box'>
+									<th>Id</th>
+									<th>Title</th>
+									<th>Description</th>
+									<th>Status</th>
+									<th>Due Date</th>
 								</tr>
-							))}
-						</tbody>
-					</Table>
-				)}
+							</thead>
+
+							<tbody>
+								{todo.map((todo, index) => (
+									<React.Fragment key={todo.id}>
+										<tr>
+											<td>{index + 1}</td>
+											<td>{completed.includes(todo.id) ? <s>{todo.title}</s> : todo.title}</td>
+											<td className='text'>{todo.description}</td>
+											<td>{todo.status}</td>
+											<td>{format(new Date(todo.dueDate), 'dd/MM/yyyy')}</td>
+											<td>
+												<Button variant='outline-light' className='BtnSuccess Btn' onClick={() => successTodo(todo.id)}>
+													Success
+												</Button>
+												<Button variant='outline-light' className='BtnEdit Btn'>
+													Edit
+												</Button>{' '}
+												<Button variant='outline-light' className='BtnDelete Btn' onClick={() => deleteTodo(todo.id)}>
+													Delete
+												</Button>
+											</td>
+										</tr>
+									</React.Fragment>
+								))}
+							</tbody>
+						</Table>
+					)}
+				</Container>
 			</section>
 		</>
 	)

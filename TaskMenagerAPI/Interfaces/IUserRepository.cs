@@ -9,7 +9,7 @@ namespace TaskMenagerAPI.Interfaces
 
         Task <User> GetUser(string userId);
         Task <ICollection<ToDo>> GetTodoesFromTodo(string userId);
-
+   
 
 
         Task <bool> DeleteUser(User user);

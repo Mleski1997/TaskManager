@@ -72,11 +72,11 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
         public async Task <IActionResult> GetAllTodoesByStatus()
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+         //   var userLogged = await GetUserLoged();
+          //  if (!userLogged.IsActive)
+          //  {
+           //     return BadRequest("User is disabled");
+          //  }
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoByStatus());
             return Ok(todoes);
         }
