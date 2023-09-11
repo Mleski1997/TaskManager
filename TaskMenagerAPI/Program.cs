@@ -18,6 +18,7 @@ var TaskMenagerAPI = "_TaskMenagerAPi";
 var builder = WebApplication.CreateBuilder(args);
 
 
+
 // Add services to the container.
 
 
@@ -62,7 +63,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 5;
 
@@ -104,6 +105,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+ 
+    Seeder.InInitializerAsync(userManager, roleManager).Wait();
+}
+
 
 
 app.UseHttpsRedirection();

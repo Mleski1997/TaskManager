@@ -27,10 +27,10 @@ namespace TaskMenagerAPI.Controllers
         private readonly IUserIsLogged _userLogged;
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
 
-        public UserController(ILogger<UserController> logger, UserWithPresenttion userWithPresenttion, IUserRepository userRepository, IUserIsLogged userLogged, IMapper mapper, DataContext context, UserManager<IdentityUser> userManager)
+        public UserController(ILogger<UserController> logger, UserWithPresenttion userWithPresenttion, IUserRepository userRepository, IUserIsLogged userLogged, IMapper mapper, DataContext context, UserManager<User> userManager)
         {
             _logger = logger;
             _userWithPresenttion = userWithPresenttion;
@@ -100,7 +100,6 @@ namespace TaskMenagerAPI.Controllers
             return Ok(user);
 
         }
-
 
         [HttpGet("{userId}/Todoes")]
 

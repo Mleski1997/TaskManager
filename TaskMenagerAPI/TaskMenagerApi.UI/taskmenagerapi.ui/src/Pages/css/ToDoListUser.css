@@ -32,9 +32,11 @@
 	background-color: rgba(0, 0, 0, 0.6);
 }
 
+
 .form-box {
 	position: relative;
 	display: flex;
+	align-items: center;
 	flex-direction: column;
 	padding: 2em;
 	border-radius: 15px;
@@ -51,15 +53,44 @@
 	top: -150px;
 }
 
+.form-group {
+	width: 100%;
+}
+
+
+
 #todosection .transparent-table {
 	background-color: transparent;
 	color: white;
+	
+	
 }
+
+
 
 #todosection .transparent-table th,
 #todosection .transparent-table td {
+
 	background-color: transparent;
 	color: white;
+	
+}
+
+.button-box {
+	width: 300px;
+	display: flex;
+	justify-content: space-around;
+
+}
+
+.search-box{
+	display: flex;
+	
+	
+}
+
+#todosection .BtnSort {
+	padding:  0.2rem  5rem;
 }
 
 Table .BtnSuccess:hover {
@@ -75,15 +106,9 @@ Table .Btn:hover {
 	color: white;
 }
 
-.description-cell {
-	overflow: auto;
-	max-width: 200px;
-	white-space: pre-wrap;
-}
-
 
 .text {
-    max-width: 600px;
+    max-width: 400px;
     word-wrap: break-word;
     overflow: break-word;
 }

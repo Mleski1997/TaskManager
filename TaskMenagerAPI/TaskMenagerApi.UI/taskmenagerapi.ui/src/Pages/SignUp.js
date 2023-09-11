@@ -10,25 +10,31 @@ function SignUp() {
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const [checkpassword, checkPassword] = useState('')
 
 	const navigate = useNavigate()
 
 	const handleSignUp = async () => {
-		try {
-			const response = await axios.post('https://localhost:7219/api/Account/register', {
-				username,
-				email,
-				password,
-			})
+		if (password !== checkpassword) {
+			console.error('Password and Confrim Password do not match')
+			return
+		} else {
+			try {
+				const response = await axios.post('https://localhost:7219/api/Account/register', {
+					username,
+					email,
+					password,
+				})
 
-			if (response.status === 200) {
-				console.log('Registraion successful')
-				navigate('/login')
-			} else {
-				console.error('Registtraion failded')
+				if (response.status === 200) {
+					console.log('Registration successful')
+					navigate('/')
+				} else {
+					console.error('Registration failed')
+				}
+			} catch (error) {
+				console.error('error', error)
 			}
-		} catch (error) {
-			console.error('error', error)
 		}
 	}
 	const handleKeyDown = event => {
@@ -67,9 +73,18 @@ function SignUp() {
 								className='custom-form-control'
 								type='password'
 								placeholder='password'
-								onKeyDown={handleKeyDown}
 								value={password}
 								onChange={e => setPassword(e.target.value)}></Form.Control>
+						</Form.Group>
+						<Form.Group className='mb-3' controlId='password'>
+							<Form.Label>ConfirmPassword</Form.Label>
+							<Form.Control
+								className='custom-form-control'
+								type='password'
+								placeholder='password'
+								onKeyDown={handleKeyDown}
+								value={checkpassword}
+								onChange={e => checkPassword(e.target.value)}></Form.Control>
 						</Form.Group>
 						<Button className='BtnLogin' variant='outline-light' onClick={handleSignUp}>
 							Register

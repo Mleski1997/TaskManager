@@ -5,20 +5,21 @@ import format from 'date-fns/format'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Table from 'react-bootstrap/Table'
-import './css/ToDoListUser.css'
 
 import Dropdown from 'react-bootstrap/Dropdown'
-import Container from 'react-bootstrap/esm/Container'
+import Container from 'react-bootstrap/Container'
+import './css/ToDoListAdmin.css'
 
 function ToDoListUser() {
 	const [todo, setTodo] = useState([])
-	const [orginalTodo, setOrginalTodo] = useState([])
+	const [originalTodo, setOriginalTodo] = useState([])
 	const [isEditing, setIsEditing] = useState(false)
 	const [editingTask, setEditingTask] = useState(null)
 	const [searchResults, setSearchResults] = useState([])
 	const [searchTerm, setSearchTerm] = useState('')
 	const token = localStorage.getItem('token')
 	const userId = localStorage.getItem('userId')
+	const [userIdForTask, setUserIdForTask] = useState('')
 
 	const [completed, setCompleted] = useState([])
 
@@ -26,6 +27,7 @@ function ToDoListUser() {
 	const description = useRef('')
 	const dueDate = useRef('')
 	const status = useRef('')
+	const userName = useRef('')
 
 	const statusEnum = {
 		Success: 'Success',
@@ -37,7 +39,7 @@ function ToDoListUser() {
 		const fetchTasks = async () => {
 			try {
 				const userId = localStorage.getItem('userId')
-				const response = await axios.get(`https://localhost:7219/api/User/${userId}/Todoes`, {
+				const response = await axios.get(`https://localhost:7219/api/ToDo`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -46,7 +48,7 @@ function ToDoListUser() {
 				if (response.status === 200) {
 					const todoItems = response.data
 					setTodo(todoItems)
-					setOrginalTodo(todoItems)
+					setOriginalTodo(todoItems)
 
 					const completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || []
 					setCompleted(completedTasks)
@@ -63,7 +65,7 @@ function ToDoListUser() {
 
 	const addTodo = () => {
 		if (isEditing) {
-			const updatedTasks = {
+			const updatedTask = {
 				title: title.current.value,
 				description: description.current.value,
 				dueDate: dueDate.current.value.split('T')[0],
@@ -72,7 +74,7 @@ function ToDoListUser() {
 			}
 
 			axios
-				.put(`https://localhost:7219/api/ToDo/${editingTask}`, updatedTasks, {
+				.put(`https://localhost:7219/api/ToDo/${editingTask}`, updatedTask, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -99,7 +101,6 @@ function ToDoListUser() {
 				dueDate: dueDate.current.value.split('T')[0],
 				status: status.current.value,
 				userId: userId,
-				//dueDate: format(new Date(dueDate.current.value), 'yyyy-MM-dd'),
 			}
 
 			axios.post(`https://localhost:7219/api/ToDo?userId=${userId}`, payload).then(response => {
@@ -117,7 +118,7 @@ function ToDoListUser() {
 
 	const deleteTodo = todoId => {
 		axios.delete(`https://localhost:7219/api/ToDo/${todoId}`)
-		const updatedTasks = todo.filter(todo => todo.id !== todoId)
+		const updatedTasks = todo.filter(task => task.id !== todoId)
 		setTodo(updatedTasks)
 	}
 
@@ -136,8 +137,8 @@ function ToDoListUser() {
 
 	const searchTodo = searchTerm => {
 		if (typeof searchTerm === 'string') {
-			const filtredTasks = orginalTodo.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()))
-			setSearchResults(filtredTasks)
+			const filteredTasks = originalTodo.filter(task => task.title.toLowerCase().includes(searchTerm.toLowerCase()))
+			setSearchResults(filteredTasks)
 		}
 	}
 
@@ -149,7 +150,7 @@ function ToDoListUser() {
 
 		const taskIndex = todo.findIndex(task => task.id === todoId)
 		if (taskIndex === -1) {
-			return // T
+			return
 		}
 
 		const updatedTodo = [...todo]
@@ -184,6 +185,17 @@ function ToDoListUser() {
 		setTodo(sortedTodoItems)
 	}
 
+	const sortByUseID = () => {
+		const sortedUserIdItems = [...todo]
+
+		sortedUserIdItems.sort((a, b) => {
+			if (a.userId > b.userId) return 1
+			if (a.userId < b.userId) return -1
+			return 0
+		})
+		setTodo(sortedUserIdItems)
+	}
+
 	const handleKeyDown = event => {
 		if (event.key === 'Enter') {
 			event.preventDefault()
@@ -191,14 +203,33 @@ function ToDoListUser() {
 		}
 	}
 
+	const GetUserIdForTask = () => {
+		if (editingTask) {
+			const task = todo.find(task => task.id === editingTask)
+			if (task) {
+				return task.userId
+			}
+			return ''
+		}
+		return userId
+	}
+
+	useEffect(() => {
+		setUserIdForTask(GetUserIdForTask())
+	}, [editingTask])
+
 	return (
 		<>
-			<section id='todosection'>
-				<div className='todo-img'>
-					<div className='todo-img--shadow'></div>
-				</div>
+			<section id='todosectiionAdmin'>
+				
 
-				<Form className='form-box'>
+				<Form className='form-box--admin'>
+					<Form.Group className='mb-3 form-group' controlId='UserId'>
+						<Form.Label>UserId</Form.Label>
+
+						<Form.Control type='text' placeholder='userId' value={userIdForTask} readOnly />
+					</Form.Group>
+
 					<Form.Group className='mb-3 form-group' controlId='title'>
 						<Form.Label>Title</Form.Label>
 						<Form.Control type='title' placeholder='title' ref={title} />
@@ -242,6 +273,9 @@ function ToDoListUser() {
 							<Dropdown.Item href='#/action-2' onClick={sortByStatus}>
 								Status
 							</Dropdown.Item>
+							<Dropdown.Item href='#/action-3' onClick={sortByUseID}>
+								UserID
+							</Dropdown.Item>
 						</Dropdown.Menu>
 					</Dropdown>
 					<div className='search-box'>
@@ -264,7 +298,7 @@ function ToDoListUser() {
 						<Table responsive hover borderless className='transparent-table'>
 							<thead>
 								<tr className='info-box'>
-									<th>Id</th>
+									<th>UserId</th>
 									<th>Title</th>
 									<th>Description</th>
 									<th>Status</th>
@@ -276,7 +310,7 @@ function ToDoListUser() {
 								{searchResults.length === 0
 									? todo.map((task, index) => (
 											<tr key={task.id}>
-												<td>{index + 1}</td>
+												<td>{task.userId}</td>
 												<td>{completed.includes(task.id) ? <s>{task.title}</s> : task.title}</td>
 												<td className='text'>{task.description}</td>
 												<td>{task.status}</td>

@@ -2,31 +2,85 @@ import logo from './logo.svg'
 import './App.css'
 import Layout from './components/shared/Layout'
 import GetAllTodoes from './Pages/Todo'
-import { Route, Routes, Router } from 'react-router-dom'
+import { Route, Routes, Router, Navigate } from 'react-router-dom'
 import Dashboard from './Pages/Dashboard'
-import Register from './Pages/SignUp'
-import Login from './Pages/Login'
-import axios from 'axios'
+import ToDoListUser from './Pages/ToDoListUser'
+import ToDoListAdmin from './Pages/ToDoListAdmin'
 
 import { useState } from 'react'
 import SignUp from './Pages/SignUp'
-import TaskList from './Pages/TaskList'
-import ToDoListUser from './Pages/ToDoListUser'
+
+const User_Types = {
+	Public_User: 'Public User',
+	Normal_User: 'User',
+	Admin_User: 'admin',
+}
+
+const current_user_type = localStorage.getItem('roles')
+console.log('roles')
 
 function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'))
 
 	return (
-		<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-			<Routes>
-				<Route path='/' element={<Dashboard setIsAuthenticated={setIsAuthenticated} />} />
-				<Route path='/' element={<Dashboard />} />
-				<Route path='/signup' element={<SignUp />} />
-				<Route path='/tasklist' element={<TaskList />} />
-				<Route path='/todolistuser' element={<ToDoListUser />} />
-			</Routes>
-		</Layout>
+		<Routes>
+			<Route
+				path='/'
+				element={
+					isAuthenticated ? <Navigate to='/todolistuser' /> : <Dashboard setIsAuthenticated={setIsAuthenticated} />
+				}
+			/>
+			<Route
+				path='/ToDoListAdmin'
+				element={
+					current_user_type === User_Types.Admin_User ? (
+						<AdminElement>
+							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
+								<ToDoListAdmin />
+							</Layout>
+						</AdminElement>
+					) : (
+						<div>You don't have access to this page</div>
+					)
+				}
+			/>
+			<Route path='/signup' element={<SignUp />} />
+			<Route
+				path='/todolistuser'
+				element={
+					current_user_type === User_Types.Admin_User || current_user_type === User_Types.Normal_User ? (
+						<UserElement>
+							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
+								<ToDoListUser />
+							</Layout>
+						</UserElement>
+					) : (
+						<Navigate to='/todolistuser' />
+					)
+				}
+			/>
+		</Routes>
 	)
+}
+
+function PublicElement({ children }) {
+	return <>{children}</>
+}
+
+function UserElement({ children }) {
+	if (current_user_type === User_Types.Admin_User || current_user_type === User_Types.Normal_User) {
+		return <>{children}</>
+	} else {
+		return <Navigate to={'/todolistuser'} />
+	}
+}
+
+function AdminElement({ children }) {
+	if (current_user_type === User_Types.Admin_User) {
+		return <>{children}</>
+	} else {
+		return <div> You dont have acces to this page</div>
+	}
 }
 
 export default App

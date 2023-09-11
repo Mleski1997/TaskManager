@@ -12,6 +12,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace TaskMenagerAPI.Controllers
 {
@@ -19,16 +20,17 @@ namespace TaskMenagerAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IAccountRepository _accountRepository;
 
         private readonly DataContext _context;
 
-        public AccountController(UserManager<IdentityUser> userManager, IAccountRepository accountRepository, DataContext context
+        public AccountController(UserManager<User> userManager,RoleManager<IdentityRole> roleManager, IAccountRepository accountRepository, DataContext context
             )
         {
-            _userManager = userManager;
+            _userManager = userManager;       
+            _roleManager = roleManager;
             _accountRepository = accountRepository;
             _context = context;
         }
@@ -38,16 +40,11 @@ namespace TaskMenagerAPI.Controllers
         {
 
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || registerDto == null)
             {
                 return BadRequest(ModelState);
             }
-            if (registerDto == null)
-            {
-                return BadRequest(ModelState);
-            }
-
-
+     
             var user = await _userManager.FindByNameAsync(registerDto.UserName);
 
             if (user != null)
@@ -55,12 +52,29 @@ namespace TaskMenagerAPI.Controllers
                 ModelState.AddModelError("", "Username already exists");
                 return BadRequest(ModelState);
             }
-            if (!await _accountRepository.RegisterUser(registerDto))
-            {
-                return BadRequest("Something went wrong");
 
+            var registrationResult = await _accountRepository.RegisterUser(registerDto);
+            
+            if (!registrationResult)
+            {
+                return BadRequest("Something went wrong during registration");
             }
-            return Ok("Created");
+
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+
+            user = await _userManager.FindByNameAsync(registerDto.UserName);
+
+            var addUserToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+
+            if(!addUserToRoleResult.Succeeded)
+            {
+                return BadRequest("Failer to add user to role");
+            }
+
+            return Ok("User registered successfully");
         }
 
 
@@ -92,13 +106,15 @@ namespace TaskMenagerAPI.Controllers
             }
 
             var tokenString = _accountRepository.GenerateJwtToken(user);
-
-          
+            var userRoles = await _userManager.GetRolesAsync(user);
+         
 
             return Ok(new 
             { 
                 tokenString,
-                UserId = user.Id});
+                UserId = user.Id,
+            Roles = userRoles,
+            });
 
 
         }

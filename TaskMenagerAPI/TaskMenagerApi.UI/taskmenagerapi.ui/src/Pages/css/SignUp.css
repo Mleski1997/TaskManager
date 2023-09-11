@@ -8,7 +8,7 @@
 #register {
    
 	position: relative;
-	display:a flex;
+	display: flex;
 	justify-content: center;
 	align-items: center;
     height: 100vh;
@@ -22,12 +22,8 @@
 	align-items: center;
 	color: beige;
 	padding: 2.6rem;
-	border: solid 2px black;
-	border-radius: 15px;
     height: 100%;
-
 	background: rgba(106, 54, 204, 0.59);
-
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 	backdrop-filter: blur(8.1px);
 	-webkit-backdrop-filter: blur(8.1px);
@@ -41,13 +37,16 @@ form.control {
 	background-color: red;
 }
 
-.register-form .custom-form-control {
+.register-form {
+	padding: 2rem;
 	background: rgba(255, 255, 255, 0.11);
 	border-radius: 16px;
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 	backdrop-filter: blur(0px);
 	-webkit-backdrop-filter: blur(0px);
-	border: 1px solid rgba(255, 255, 255, 0.4);
-	color: white;
+	border: 1px solid rgba(0, 0, 0, 0.4)
+	
+	
 }
+
 

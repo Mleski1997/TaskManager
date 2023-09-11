@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import axios from 'axios'
-import './css/Dashboard.css'
 import { id } from 'date-fns/locale'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-
- 
-
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import './css/Dashboard.css'
 
 import { Link } from 'react-router-dom'
 
@@ -24,9 +21,12 @@ const Dashboard = ({ setIsAuthenticated }) => {
 			const response = await axios.post('https://localhost:7219/api/Account/login', { userName: username, password })
 
 			if (response.status === 200) {
-				const { tokenString, userId } = response.data
+				const { tokenString, userId, roles } = response.data
 				localStorage.setItem('token', tokenString)
 				localStorage.setItem('userId', userId)
+				localStorage.setItem('username', username)
+				localStorage.setItem('roles', roles)
+				console.log('roles', roles)
 
 				setIsAuthenticated(true)
 				navigate('/todolistuser')
@@ -45,10 +45,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
 		}
 	}
 
-
-
-
-
 	return (
 		<>
 			<section id='main'>
@@ -63,14 +59,10 @@ const Dashboard = ({ setIsAuthenticated }) => {
 					</div>
 				</div>
 				<div className='login'>
-					
 					<Form className='login-form'>
-						
-						<FontAwesomeIcon icon={faUser}  className='login-icon'></FontAwesomeIcon>
+						<FontAwesomeIcon icon={faUser} className='login-icon'></FontAwesomeIcon>
 						<p className='login-text'>Have an account?</p>
-				
 						<Form.Group className='mb-3' controlId='Username'>
-							
 							<Form.Control
 								className='custom-form-control'
 								type='string'
@@ -80,7 +72,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
 							/>
 						</Form.Group>
 						<Form.Group className='mb-3' controlId='title'>
-							
 							<Form.Control
 								className='custom-form-control'
 								type='password'
@@ -91,12 +82,11 @@ const Dashboard = ({ setIsAuthenticated }) => {
 							/>
 							<div className='bot'></div>
 						</Form.Group>
-						<Button className='BtnLogin'  onClick={handleLogin}>
+						<Button className='BtnLogin' onClick={handleLogin}>
 							Login
 						</Button>{' '}
 					</Form>
 				</div>
-				
 			</section>
 		</>
 	)
