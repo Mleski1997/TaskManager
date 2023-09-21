@@ -25,14 +25,16 @@ namespace TaskMenagerAPI.Controllers
         private readonly IAccountRepository _accountRepository;
 
         private readonly DataContext _context;
+        private readonly IUserIsLogged _userIsLogged;
 
-        public AccountController(UserManager<User> userManager,RoleManager<IdentityRole> roleManager, IAccountRepository accountRepository, DataContext context
+        public AccountController(UserManager<User> userManager,RoleManager<IdentityRole> roleManager, IAccountRepository accountRepository, DataContext context,  IUserIsLogged userIsLogged
             )
         {
             _userManager = userManager;       
             _roleManager = roleManager;
             _accountRepository = accountRepository;
             _context = context;
+            _userIsLogged = userIsLogged;
         }
 
         [HttpPost("register")]
@@ -90,30 +92,40 @@ namespace TaskMenagerAPI.Controllers
             {
                 return BadRequest("Invalid username ot password");
             }
-        //    if (!userLogged.IsActive)
-          //  {
-            //    return BadRequest("User is disabled");
-           // }
+                
+          
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if(user.IsActive != true)
+            {
+                return StatusCode(403, "User is disabled");
+            }
+
             var result = await _accountRepository.LoginUser(loginDto);
             if (result == false)
             {
-                return BadRequest();
+                return BadRequest("Invalid username ot password");
             }
+
+           
 
             var tokenString = _accountRepository.GenerateJwtToken(user);
             var userRoles = await _userManager.GetRolesAsync(user);
+            
          
-
+            
             return Ok(new 
             { 
                 tokenString,
                 UserId = user.Id,
-            Roles = userRoles,
+                Roles = userRoles,
+                userIsActive = user.IsActive
+
+
             });
 
 

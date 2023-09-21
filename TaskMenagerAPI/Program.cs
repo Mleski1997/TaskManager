@@ -66,6 +66,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 5;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
 
 }).AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();

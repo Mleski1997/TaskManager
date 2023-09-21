@@ -3,11 +3,8 @@ import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { LinkContainer } from 'react-router-bootstrap'
 import Button from 'react-bootstrap/Button'
-import { Link } from 'react-router-dom'
 import React, { useState } from 'react'
-import { Component } from 'react'
 
 function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 	const navigate = useNavigate()
@@ -31,8 +28,9 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 						<div className='nav text-light'>
 							{userRole === 'admin' ? (
 								<>
-									<Nav.Link href='/userlist'>UserList</Nav.Link>
-									<Nav.Link href='/todolistadmin'>ToDoList</Nav.Link>
+									<Nav.Link href='/userslistadmin'>UserList</Nav.Link>
+									<Nav.Link href='/todolistadmin'>AllToDoList</Nav.Link>
+									<Nav.Link href='/todolistuser'>ToDoList</Nav.Link>
 									<span className='nav-text me-4'>Hello {username} </span>
 									<Button variant='outline-light' onClick={handleLogout}>
 										Logout

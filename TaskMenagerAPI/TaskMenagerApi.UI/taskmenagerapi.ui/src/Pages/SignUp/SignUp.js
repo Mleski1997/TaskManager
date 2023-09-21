@@ -1,46 +1,48 @@
 import React, { useState } from 'react'
-import './css/SignUp.css'
+import './SignUp.css'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useNavigate } from 'react-router-dom'
-
-import axios from 'axios'
 
 function SignUp() {
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [checkpassword, checkPassword] = useState('')
+	const [error, setError] = useState('')
 
 	const navigate = useNavigate()
 
-	const handleSignUp = async () => {
+	const handleSignUpClick = async () => {
 		if (password !== checkpassword) {
-			console.error('Password and Confrim Password do not match')
+			setError('Password and Confrim Password do not match')
 			return
 		} else {
 			try {
-				const response = await axios.post('https://localhost:7219/api/Account/register', {
+				const success = await SignUp({
 					username,
 					email,
 					password,
 				})
 
-				if (response.status === 200) {
-					console.log('Registration successful')
+				if (success) {
 					navigate('/')
 				} else {
-					console.error('Registration failed')
+					setError('Registration failed')
 				}
 			} catch (error) {
-				console.error('error', error)
+				if (error.response && error.response.status === 400) {
+					setError('Password must have one uppercase, lowercase, special sign, digit ')
+				} else {
+					setError('Error: ' + error.message)
+				}
 			}
 		}
 	}
 	const handleKeyDown = event => {
 		if (event.key === 'Enter') {
 			event.preventDefault()
-			handleSignUp()
+			handleSignUpClick()
 		}
 	}
 
@@ -76,8 +78,9 @@ function SignUp() {
 								value={password}
 								onChange={e => setPassword(e.target.value)}></Form.Control>
 						</Form.Group>
-						<Form.Group className='mb-3' controlId='password'>
+						<Form.Group className='mb-3' controlId='confimPassword'>
 							<Form.Label>ConfirmPassword</Form.Label>
+
 							<Form.Control
 								className='custom-form-control'
 								type='password'
@@ -86,9 +89,13 @@ function SignUp() {
 								value={checkpassword}
 								onChange={e => checkPassword(e.target.value)}></Form.Control>
 						</Form.Group>
-						<Button className='BtnLogin' variant='outline-light' onClick={handleSignUp}>
+						{error && <p className='error'>{error}</p>}
+						<Button className='BtnLogin' variant='outline-light' onClick={handleSignUpClick}>
 							Register
 						</Button>{' '}
+						<a href='/' className='loginLink'>
+							Login
+						</a>
 					</Form>
 				</div>
 			</section>

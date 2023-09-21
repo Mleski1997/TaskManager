@@ -1,47 +1,47 @@
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
-import axios from 'axios'
-import { id } from 'date-fns/locale'
+
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import './css/Dashboard.css'
+import './Dashboard.css'
 
 import { Link } from 'react-router-dom'
+import { handleLogin } from '../../services/loginservices'
 
 const Dashboard = ({ setIsAuthenticated }) => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
+	const [error, setError] = useState('')
 
 	const navigate = useNavigate()
 
-	const handleLogin = async () => {
+	const handleLoginClick = async () => {
 		try {
-			const response = await axios.post('https://localhost:7219/api/Account/login', { userName: username, password })
+			const success = await handleLogin(username, password)
 
-			if (response.status === 200) {
-				const { tokenString, userId, roles } = response.data
-				localStorage.setItem('token', tokenString)
-				localStorage.setItem('userId', userId)
-				localStorage.setItem('username', username)
-				localStorage.setItem('roles', roles)
-				console.log('roles', roles)
-
+			if (success) {
 				setIsAuthenticated(true)
 				navigate('/todolistuser')
 			} else {
-				console.error('Login failed')
+				setError('Failed login')
 			}
 		} catch (error) {
-			console.error('Error:', error)
+			if (error.response && error.response.status === 400) {
+				setError('Invalid username or password')
+			} else if (error.response.status === 403) {
+				setError('Account is banned')
+			} else {
+				setError('Error: ' + error.message)
+			}
 		}
 	}
 
 	const handleKeyDown = event => {
 		if (event.key === 'Enter') {
 			event.preventDefault()
-			handleLogin()
+			handleLoginClick()
 		}
 	}
 
@@ -82,7 +82,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
 							/>
 							<div className='bot'></div>
 						</Form.Group>
-						<Button className='BtnLogin' onClick={handleLogin}>
+						{error && <p className='error'>{error}</p>}
+						<Button className='BtnLogin' onClick={handleLoginClick}>
 							Login
 						</Button>{' '}
 					</Form>

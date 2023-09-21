@@ -10,6 +10,7 @@ using System.Security.Claims;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
+using TaskMenagerAPI.Migrations;
 using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers
@@ -55,11 +56,7 @@ namespace TaskMenagerAPI.Controllers
         public async Task<IActionResult> GetUsers()
         {
 
-            //   var userLogged = await GetUserLoged();
-            //  if (!userLogged.IsActive)
-            //{
-            //    return BadRequest("User is disabled");
-            // }
+             
 
             var userDto = _mapper.Map<List<UserDTO>>(await _userRepository.GetUsers());
 
@@ -84,11 +81,7 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task<IActionResult> GetUser(string userId)
         {
-            //   var userLogged = await GetUserLoged();
-            //  if (!userLogged.IsActive)
-            //{
-            //    return BadRequest("User is disabled");
-            // }
+             
 
 
             var user = _mapper.Map<UserWithTaskDTO>(await _userRepository.GetUser(userId));
@@ -105,11 +98,7 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task<IActionResult> GetTodoesFromTodo(string userId)
         {
-            //   var userLogged = await GetUserLoged();
-            //  if (!userLogged.IsActive)
-            //{
-            //    return BadRequest("User is disabled");
-            // }
+      
 
 
             var todoes = _mapper.Map<List<ToDoDTO>>(await _userRepository.GetTodoesFromTodo(userId));
@@ -154,6 +143,8 @@ namespace TaskMenagerAPI.Controllers
         public async Task<IActionResult> EditUserStatus(string userId, [FromBody] UserActiveDTO activeUser) {
 
             bool isUpdated = await _userRepository.UpdateActive(userId, activeUser);
+
+         
 
             if (!isUpdated)
             {

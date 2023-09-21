@@ -15,7 +15,7 @@
 
 .hero-img {
 	position: relative;
-	background-image: url('../img/notes.jpg');
+	background-image: url('../../assets/images/notes.jpg');
 	background-size: cover;
 	display: flex;
 	justify-content: center;

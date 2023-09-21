@@ -21,7 +21,7 @@
 	top: 40px;
 	height: 400px;
 	width: 100%;
-	background-image: url('../img/todoimg.jpg');
+	background-image: url('../../assets/images/todoimg.jpg');
 	background-size: cover;
 	background-position-y: -300px;
 }
@@ -31,7 +31,6 @@
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.6);
 }
-
 
 .form-box {
 	position: relative;
@@ -57,40 +56,33 @@
 	width: 100%;
 }
 
-
-
 #todosection .transparent-table {
 	background-color: transparent;
 	color: white;
-	
-	
 }
-
-
 
 #todosection .transparent-table th,
 #todosection .transparent-table td {
-
 	background-color: transparent;
 	color: white;
-	
 }
 
 .button-box {
 	width: 300px;
 	display: flex;
 	justify-content: space-around;
-
 }
 
-.search-box{
+.todo-box {
 	display: flex;
-	
-	
+	justify-content: center;
+}
+.search-box {
+	display: flex;
 }
 
 #todosection .BtnSort {
-	padding:  0.2rem  5rem;
+	padding: 0.2rem 5rem;
 }
 
 Table .BtnSuccess:hover {
@@ -106,9 +98,13 @@ Table .Btn:hover {
 	color: white;
 }
 
-
 .text {
-    max-width: 400px;
-    word-wrap: break-word;
-    overflow: break-word;
+	max-width: 300px;
+	word-wrap: break-word;
+	overflow: break-word;
+}
+
+.date,
+.status {
+	width: 50%;
 }

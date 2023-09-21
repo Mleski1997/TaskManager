@@ -39,11 +39,7 @@ namespace TaskMenagerAPI.Controllers
 
 
         public async Task <IActionResult> GetAllTodoes() {
-          //  var userLogged = await GetUserLoged();
-           // if (!userLogged.IsActive)
-          //  {
-          //      return BadRequest("User is disabled");
-           // }
+          
 
 
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDo());
@@ -59,11 +55,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
         public async Task <IActionResult> GetAllTodoesByDate()
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+         
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoByDate());
             return Ok(todoes);
         }
@@ -72,11 +64,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<ToDo>))]
         public async Task <IActionResult> GetAllTodoesByStatus()
         {
-         //   var userLogged = await GetUserLoged();
-          //  if (!userLogged.IsActive)
-          //  {
-           //     return BadRequest("User is disabled");
-          //  }
+         
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoByStatus());
             return Ok(todoes);
         }
@@ -84,11 +72,7 @@ namespace TaskMenagerAPI.Controllers
         [HttpGet("Filter/Title")]
         public async Task <IActionResult> GetAllFilterByTitle(string title)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+            
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllFilterByTitle(title));
             return Ok(todoes);
 
@@ -96,11 +80,7 @@ namespace TaskMenagerAPI.Controllers
         [HttpGet("Filter/Status")]
         public async Task <IActionResult> GetAllFilterByStatus([FromQuery] Status status)
         {
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+           
             var todoes = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllFilterByStatus(status));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -119,11 +99,7 @@ namespace TaskMenagerAPI.Controllers
         public async Task<IActionResult> GetToDo(int todoId)
         {
 
-            var userLogged = await GetUserLoged();
-            if (!userLogged.IsActive)
-            {
-                return BadRequest("User is disabled");
-            }
+          
 
             var todo = _mapper.Map<ToDoDTO>(await _toDoRepository.GetTodo(todoId));
 
@@ -143,11 +119,7 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> GetAllToDoFromUser(string  userId)
         {
-            var userLogged = await GetUserLoged();
-         //   if (!userLogged.IsActive)
-          //  {
-          //      return BadRequest("User is disabled");
-           // }
+          
             var todo = _mapper.Map<List<ToDoDTO>>(await _toDoRepository.GetAllToDoFromUser(userId));
             return Ok(todo);
 
@@ -165,11 +137,7 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
         {
-           // var userLogged = await GetUserLoged();
-           // if (!userLogged.IsActive)
-           // {
-           //     return BadRequest("User is disabled");
-           // }
+           
 
            // var todoes = await _toDoRepository.GetAllToDo();
             //var todo = todoes.FirstOrDefault(x => x.Title.Trim().ToUpper() == todoCreate.Title.Trim().ToUpper());
@@ -203,11 +171,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(404)]
         public async Task <IActionResult> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
         {
-         //   var userLogged = await GetUserLoged();
-    //        if (!userLogged.IsActive)
-      //      {
-        ///        return BadRequest("User is disabled");
-         //   }
+          
             bool toDoUpdated = await _toDoRepository.UpdateToDo(todoId, updatedToDo);
 
            if(!toDoUpdated)
@@ -228,11 +192,7 @@ namespace TaskMenagerAPI.Controllers
 
         public async Task <IActionResult> DeleteUser(int todoId)
         {
-            var userLogged = await GetUserLoged();
-         //   if (!userLogged.IsActive)
-           // {
-           //     return BadRequest("User is disabled");
-           // }
+          
 
             var todoToDelete = await _toDoRepository.GetTodo(todoId);
 

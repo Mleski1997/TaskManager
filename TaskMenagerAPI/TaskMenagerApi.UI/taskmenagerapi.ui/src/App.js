@@ -1,14 +1,14 @@
-import logo from './logo.svg'
 import './App.css'
 import Layout from './components/shared/Layout'
-import GetAllTodoes from './Pages/Todo'
+
 import { Route, Routes, Router, Navigate } from 'react-router-dom'
-import Dashboard from './Pages/Dashboard'
-import ToDoListUser from './Pages/ToDoListUser'
-import ToDoListAdmin from './Pages/ToDoListAdmin'
+import Dashboard from './Pages/Dashboard/Dashboard'
+import ToDoListUser from './Pages/ToDoListUser/ToDoListUser'
+import ToDoListAdmin from './Pages/ToDoListAdmin/ToDoListAdmin'
+import UsersListAdmin from './Pages/UsersListAdmin/UsersListAdmin'
 
 import { useState } from 'react'
-import SignUp from './Pages/SignUp'
+import SignUp from './Pages/SignUp/SignUp'
 
 const User_Types = {
 	Public_User: 'Public User',
@@ -17,7 +17,7 @@ const User_Types = {
 }
 
 const current_user_type = localStorage.getItem('roles')
-console.log('roles')
+
 
 function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'))
@@ -44,6 +44,21 @@ function App() {
 					)
 				}
 			/>
+			<Route
+				path='/UsersListAdmin'
+				element={
+					current_user_type === User_Types.Admin_User ? (
+						<AdminElement>
+							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
+								<UsersListAdmin />
+							</Layout>
+						</AdminElement>
+					) : (
+						<div>You don't have access to this page</div>
+					)
+				}
+			/>
+
 			<Route path='/signup' element={<SignUp />} />
 			<Route
 				path='/todolistuser'
