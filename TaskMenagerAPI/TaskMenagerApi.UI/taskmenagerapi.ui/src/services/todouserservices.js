@@ -1,5 +1,6 @@
 import axios from "axios"
 import { getToken, getUser } from "./auth"
+
 const token = getToken();
 const userId = getUser();
 

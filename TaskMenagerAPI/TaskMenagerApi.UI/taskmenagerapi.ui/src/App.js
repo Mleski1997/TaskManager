@@ -1,14 +1,14 @@
 import './App.css'
-import Layout from './components/shared/Layout'
+import Layout from './components/shared/Layout/Layout'
 
 import { Route, Routes, Router, Navigate } from 'react-router-dom'
-import Dashboard from './Pages/Dashboard/Dashboard'
-import ToDoListUser from './Pages/ToDoListUser/ToDoListUser'
-import ToDoListAdmin from './Pages/ToDoListAdmin/ToDoListAdmin'
-import UsersListAdmin from './Pages/UsersListAdmin/UsersListAdmin'
+import Dashboard from './Pages/Dashboard/dashboard'
+import ToDoListUser from './Pages/ToDoListUser/toDoListUser'
+import ToDoListAdmin from './Pages/ToDoListAdmin/toDoListAdmin'
+import UsersListAdmin from './Pages/UsersListAdmin/usersListAdmin'
 
 import { useState } from 'react'
-import SignUp from './Pages/SignUp/SignUp'
+import SignUp from './Pages/SignUp/signUp'
 
 const User_Types = {
 	Public_User: 'Public User',
@@ -17,7 +17,6 @@ const User_Types = {
 }
 
 const current_user_type = localStorage.getItem('roles')
-
 
 function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'))

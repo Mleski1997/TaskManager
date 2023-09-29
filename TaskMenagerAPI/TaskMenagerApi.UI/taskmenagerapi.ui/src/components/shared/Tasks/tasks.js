@@ -1,27 +1,29 @@
-function todoUserList(
-	task,
-	index,
-	completed,
-	format,
-	Button,
-	successTodo,
-	todo,
-	setTodo,
-	updatedSuccess,
-	setCompleted,
-	statusEnum,
-	startEditing,
-	setIsEditing,
-	setEditingTask,
-	title,
-	description,
-	dueDate,
-	status,
-	deleteTodo
-) {
+import Button from 'react-bootstrap/Button'
+import format from 'date-fns/format'
+export function Tasks(props) {
+	const {
+		task,
+		todo,
+		setTodo,
+		updatedSuccess,
+		completed,
+		setCompleted,
+		successTodo,
+		statusEnum,
+		startEditing,
+		format,
+		deleteTodo,
+		title,
+		description,
+		dueDate,
+		setIsEditing,
+		setEditingTask,
+		status,
+	} = props
+
 	return (
-		<tr key={task.id}>
-			<td>{index + 1}</td>
+		<>
+			<td>{task.userId}</td>
 			<td>{completed.includes(task.id) ? <s>{task.title}</s> : task.title}</td>
 			<td className='text'>{task.description}</td>
 			<td>{task.status}</td>
@@ -45,7 +47,6 @@ function todoUserList(
 					Delete
 				</Button>
 			</td>
-		</tr>
+		</>
 	)
 }
-export default todoUserList

@@ -10,7 +10,6 @@ using System.Security.Claims;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
-using TaskMenagerAPI.Migrations;
 using TaskMenagerAPI.Models;
 
 namespace TaskMenagerAPI.Controllers

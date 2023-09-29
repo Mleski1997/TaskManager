@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace TaskMenagerAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class seeder : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,8 +30,7 @@ namespace TaskMenagerAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -181,24 +178,6 @@ namespace TaskMenagerAPI.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { "1", 0, "9a75e8dc-f4e4-4c4e-95aa-ef61924e9a49", "User", null, false, false, false, null, null, null, null, null, false, "76d403d3-5acf-426e-9f90-1027da869ac4", false, "Test" },
-                    { "2", 0, "e25e5d29-ab42-4da4-a96f-347fbf07b8aa", "User", null, false, false, false, null, null, null, null, null, false, "b500efe7-b6a9-4143-a19b-cfdbee9fdfa3", false, "test2" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ToDoes",
-                columns: new[] { "Id", "Description", "DueDate", "Status", "Title", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "Test", new DateTime(2022, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "Test", "2" },
-                    { 2, "Test2", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Test2", "2" }
                 });
 
             migrationBuilder.CreateIndex(

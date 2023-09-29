@@ -5,7 +5,7 @@
 namespace TaskMenagerAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class userRole : Migration
+    public partial class seeden2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

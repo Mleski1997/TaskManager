@@ -5,10 +5,10 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import './Dashboard.css'
+import './dashboard.css'
 
 import { Link } from 'react-router-dom'
-import { handleLogin } from '../../services/loginservices'
+import { handleLogin } from '../../services/loginServices'
 
 const Dashboard = ({ setIsAuthenticated }) => {
 	const [username, setUsername] = useState('')

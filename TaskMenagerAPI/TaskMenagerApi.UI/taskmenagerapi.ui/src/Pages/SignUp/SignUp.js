@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import './SignUp.css'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useNavigate } from 'react-router-dom'
+import { handleSignUp } from '../../services/signupServices'
+import axios from 'axios'
+import './signUp.css'
 
 function SignUp() {
 	const [username, setUsername] = useState('')
@@ -19,7 +21,7 @@ function SignUp() {
 			return
 		} else {
 			try {
-				const success = await SignUp({
+				const success = await axios.post('https://localhost:7219/api/Account/register', {
 					username,
 					email,
 					password,

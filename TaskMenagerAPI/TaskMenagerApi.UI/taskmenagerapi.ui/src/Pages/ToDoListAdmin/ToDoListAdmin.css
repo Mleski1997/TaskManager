@@ -11,7 +11,7 @@
 	justify-content: center;
 	align-items: center;
 	background-color: rgb(25, 0, 45);
-	height: 100%;
+	height: 100vh;
 	width: 100%;
 	color: white;
 	margin-top: 50px;
@@ -25,36 +25,29 @@
 	display: flex;
 	width: 100%;
 }
-#todosectionadmin .transparent-table {
-	background-color: transparent;
-	color: white;
-	
-	
-}
+#todosectionadmin .transparent-table,
 #todosectionadmin .transparent-table th,
 #todosectionadmin .transparent-table td {
-
 	background-color: transparent;
 	color: white;
-	
 }
 
 .todo-box--admin {
-    position: relative;
-    margin-top: 220px;
+	position: relative;
+	margin-top: 220px;
 }
-.form-button--admin{
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-    width: 100%;
-
-    .BtnSort {
-        height: 100%;
-    }
+.form-button--admin {
+	display: flex;
+	justify-content: space-between;
+	height: 40px;
+	width: 100%;
 }
 
-.date, .status{
-    width: 50%;
+.BtnSort {
+	height: 100%;
 }
 
+.date,
+.status {
+	width: 50%;
+}

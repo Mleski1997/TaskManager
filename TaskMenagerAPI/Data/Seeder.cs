@@ -12,6 +12,7 @@ namespace TaskMenagerAPI.Data
             string adminEmail = "admin@gmail.com";
             string adminPassword = "P@ssw0rd";
 
+
             if(!await roleManager.RoleExistsAsync(adminRole))
             {
                 await roleManager.CreateAsync(new IdentityRole(adminRole));
@@ -22,7 +23,9 @@ namespace TaskMenagerAPI.Data
                 var adminUser = new User
                 {
                     UserName = adminUserName,
-                    Email = adminEmail
+                    Email = adminEmail,
+                    IsActive = true,
+                    
                 };
 
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
