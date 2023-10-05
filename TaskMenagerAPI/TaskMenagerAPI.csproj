@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TaskMenagerApi.UI\taskmenagerapi.ui\**" />
+    <Content Remove="TaskMenagerApi.UI\taskmenagerapi.ui\**" />
+    <EmbeddedResource Remove="TaskMenagerApi.UI\taskmenagerapi.ui\**" />
+    <None Remove="TaskMenagerApi.UI\taskmenagerapi.ui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.20" />
