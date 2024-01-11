@@ -15,7 +15,7 @@ namespace TaskMenagerAPI.Interfaces
         Task<ICollection<ToDo>> GetAllFilterByStatus(Status status);
         Task <ToDo> GetTodo(int todoId);
         Task <bool> CreateToDo (ToDo toDo);
-        Task <bool> UpdateToDo (int todoId, [FromBody] ToDoDTO updatedToDo);
+        Task <bool> UpdateToDo (int todoId, [FromBody] ToDoEditDTO updatedToDo);
         Task <bool> DeleteToDo(ToDo toDo);
         Task<bool> Save();
         

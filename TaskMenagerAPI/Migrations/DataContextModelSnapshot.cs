@@ -178,7 +178,6 @@ namespace TaskMenagerAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -256,6 +255,21 @@ namespace TaskMenagerAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("TaskMenagerAPI.Models.UserToDo", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ToDoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ToDoId");
+
+                    b.HasIndex("ToDoId");
+
+                    b.ToTable("UserToDoes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -309,18 +323,40 @@ namespace TaskMenagerAPI.Migrations
 
             modelBuilder.Entity("TaskMenagerAPI.Models.ToDo", b =>
                 {
-                    b.HasOne("TaskMenagerAPI.Models.User", "User")
+                    b.HasOne("TaskMenagerAPI.Models.User", null)
                         .WithMany("Todoes")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("TaskMenagerAPI.Models.UserToDo", b =>
+                {
+                    b.HasOne("TaskMenagerAPI.Models.ToDo", "ToDo")
+                        .WithMany("UserToDoes")
+                        .HasForeignKey("ToDoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskMenagerAPI.Models.User", "User")
+                        .WithMany("UserToDoes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ToDo");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskMenagerAPI.Models.ToDo", b =>
+                {
+                    b.Navigation("UserToDoes");
                 });
 
             modelBuilder.Entity("TaskMenagerAPI.Models.User", b =>
                 {
                     b.Navigation("Todoes");
+
+                    b.Navigation("UserToDoes");
                 });
 #pragma warning restore 612, 618
         }

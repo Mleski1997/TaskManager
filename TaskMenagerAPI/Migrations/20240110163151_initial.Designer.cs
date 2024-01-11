@@ -12,8 +12,8 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230926083059_init")]
-    partial class init
+    [Migration("20240110163151_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,7 +181,6 @@ namespace TaskMenagerAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -259,6 +258,21 @@ namespace TaskMenagerAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("TaskMenagerAPI.Models.UserToDo", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ToDoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ToDoId");
+
+                    b.HasIndex("ToDoId");
+
+                    b.ToTable("UserToDoes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -312,18 +326,38 @@ namespace TaskMenagerAPI.Migrations
 
             modelBuilder.Entity("TaskMenagerAPI.Models.ToDo", b =>
                 {
-                    b.HasOne("TaskMenagerAPI.Models.User", "User")
+                    b.HasOne("TaskMenagerAPI.Models.User", null)
                         .WithMany("Todoes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("TaskMenagerAPI.Models.UserToDo", b =>
+                {
+                    b.HasOne("TaskMenagerAPI.Models.ToDo", "ToDo")
+                        .WithMany("UserToDoes")
+                        .HasForeignKey("ToDoId")
                         .IsRequired();
 
+                    b.HasOne("TaskMenagerAPI.Models.User", "User")
+                        .WithMany("UserToDoes")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("ToDo");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskMenagerAPI.Models.ToDo", b =>
+                {
+                    b.Navigation("UserToDoes");
                 });
 
             modelBuilder.Entity("TaskMenagerAPI.Models.User", b =>
                 {
                     b.Navigation("Todoes");
+
+                    b.Navigation("UserToDoes");
                 });
 #pragma warning restore 612, 618
         }

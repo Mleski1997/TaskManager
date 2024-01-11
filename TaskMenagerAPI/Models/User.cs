@@ -9,5 +9,6 @@ namespace TaskMenagerAPI.Models
         
         public bool IsActive { get; set; }
         public ICollection<ToDo> Todoes { get; set; }
+        public ICollection<UserToDo> UserToDoes { get; set; }
     }
 }

@@ -1,3 +1,6 @@
+@import '../../styles/colors.css';
+
+
 * {
 	box-sizing: border-box;
 	padding: 0;
@@ -59,20 +62,19 @@
 	color: rgb(0, 0, 0);
 	padding: 2.6rem;
 	border: solid 2px black;
-	border-radius: 15px;
-	background-color: rgb(238, 235, 235);
+	background-color: var(--primary-color)
 }
 
-.login-form {
-	background-color: rgb(255, 255, 255);
-	padding: 3em;
-	box-shadow: 1px 1px 20px rgb(146, 144, 144);
-}
+
 
 #main .BtnLogin {
 	margin-top: 1.2em;
 	background-color: rgb(105, 9, 201);
 	width: 100%;
+}
+
+#main .BtnSingUp {
+	padding: 0.3em 2.4em;
 }
 
 Form {
@@ -97,5 +99,5 @@ Form {
 	margin-bottom: 2.2rem;
 }
 .login-text {
-	color: rgb(105, 9, 201);
+	color: var(--text-color);
 }

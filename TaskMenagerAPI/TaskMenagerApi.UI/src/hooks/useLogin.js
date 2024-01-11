@@ -28,8 +28,6 @@ export const useLogin = () => {
 			} else {
 				setError('Error: ' + error.message)
 			}
-
-			throw error
 		}
 	}
 

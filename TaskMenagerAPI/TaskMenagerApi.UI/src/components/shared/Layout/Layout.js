@@ -14,13 +14,35 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 	const handleLogout = () => {
 		localStorage.removeItem('token')
 		setIsAuthenticated(false)
-		navigate('/')
+		navigate('/TaskMenager')
 		console.log('Logout success')
 	}
 
 	return (
 		<>
-			<Navbar bg='dark' variant='dark' className='fixed-top text-light'>
+		<div className='header'>
+			<div className='side-nav'>
+				<h2 className='nav-title'>TaskMenager</h2>
+
+			   <ul className='nav-links'>
+				    <li><a href='/tasklist'>Tasks</a></li>
+					<li><a href='/newtask'>New Task</a></li>
+			   </ul>
+              
+			   <div className='nav-bottom'>
+			        <a className='custom-button btnLogout' onClick={handleLogout}>
+				       Logout
+			        </a>
+			   </div>
+			</div>
+		
+			
+			
+		
+
+
+
+			{/* <Navbar bg='dark' variant='dark' className='fixed-top text-light'>
 				<Container>
 					<Navbar.Brand href='/TodoListUser'>TaskManager</Navbar.Brand>
 
@@ -53,9 +75,10 @@ function Layout({ isAuthenticated, setIsAuthenticated, children }) {
 						</>
 					)}
 				</Container>
-			</Navbar>
+			</Navbar>  */}
 
-			{children}
+			{children} 
+		</div>
 		</>
 	)
 }

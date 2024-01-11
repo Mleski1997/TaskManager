@@ -11,27 +11,31 @@ namespace TaskMenagerAPI.Data
         {
         }
         public DbSet<ToDo> ToDoes { get; set; }
-    
+        public DbSet<UserToDo> UserToDoes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
 
+           
+
+           modelBuilder.Entity<UserToDo>() 
+                .HasKey(ut => new {ut.UserId, ut.ToDoId});
+            modelBuilder.Entity<UserToDo>()
+                .HasOne(u =>  u.User)
+                .WithMany(ut => ut.UserToDoes)
+                .HasForeignKey(u => u.UserId).
+                OnDelete(DeleteBehavior.Cascade);
 
 
+            modelBuilder.Entity<UserToDo>()
+                .HasOne(t => t.ToDo)
+                .WithMany(ut => ut.UserToDoes)
+                .HasForeignKey(t => t.ToDoId).
+                OnDelete(DeleteBehavior.Cascade);
 
-
-
-
-            modelBuilder.Entity<ToDo>()
-                .HasOne(p => p.User)
-                .WithMany(c => c.Todoes)
-                .HasForeignKey(c => c.UserId);
-
-
-        }
-
-     
+        }  
     }
 }

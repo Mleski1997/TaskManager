@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import '../../../styles/buttons.css'
 
 export function SignUpForm(props) {
 	const {
@@ -14,6 +14,7 @@ export function SignUpForm(props) {
 		checkPassword,
 		setPassword,
 		setCheckPassword,
+		setError,
 	} = props
 
 	const handleKeyDown = e => {
@@ -24,9 +25,14 @@ export function SignUpForm(props) {
 
 	return (
 		<section id='register'>
+			<div className='register-img'>
+				<div className="r-img"></div>
+			</div>
 			<div className='register-container'>
+				<h2 className='register-title'>Sign Up</h2>
+				<p className='register-text'>Start using TaskManager to control your progress</p>
 				<Form className='register-form'>
-					<Form.Group className='mb-3' controlId='Username'>
+					<Form.Group className='mb-3 register-input' controlId='Username'>
 						<Form.Label>Username</Form.Label>
 						<Form.Control
 							className='custom-form-control'
@@ -35,7 +41,7 @@ export function SignUpForm(props) {
 							value={username}
 							onChange={e => setUsername(e.target.value)}></Form.Control>
 					</Form.Group>
-					<Form.Group className='mb-3' controlId='Email'>
+					<Form.Group className='mb-3 register-input ' controlId='Email'>
 						<Form.Label>Email</Form.Label>
 						<Form.Control
 							className='custom-form-control'
@@ -44,7 +50,7 @@ export function SignUpForm(props) {
 							value={email}
 							onChange={e => setEmail(e.target.value)}></Form.Control>
 					</Form.Group>
-					<Form.Group className='mb-3' controlId='password'>
+					<Form.Group className='mb-3 register-input ' controlId='password'>
 						<Form.Label>Password</Form.Label>
 						<Form.Control
 							className='custom-form-control'
@@ -53,8 +59,8 @@ export function SignUpForm(props) {
 							value={password}
 							onChange={e => setPassword(e.target.value)}></Form.Control>
 					</Form.Group>
-					<Form.Group className='mb-3' controlId='confimPassword'>
-						<Form.Label>ConfirmPassword</Form.Label>
+					<Form.Group className='mb-3 register-input ' controlId='confimPassword'>
+						<Form.Label>Confirm Password</Form.Label>
 
 						<Form.Control
 							className='custom-form-control'
@@ -64,11 +70,11 @@ export function SignUpForm(props) {
 							onKeyDown={handleKeyDown}
 							onChange={e => setCheckPassword(e.target.value)}></Form.Control>
 					</Form.Group>
-					{error && <p className='error'>{error}</p>}
-					<Button className='BtnLogin' variant='outline-light' onClick={registerUser}>
+					{error && <p className='error-message'>{error}</p>}
+					<a className='custom-button'  onClick={registerUser}>
 						Register
-					</Button>{' '}
-					<a href='/' className='loginLink'>
+					</a>{' '}
+					<a href='/TaskMenager' className='loginLink'>
 						Login
 					</a>
 				</Form>

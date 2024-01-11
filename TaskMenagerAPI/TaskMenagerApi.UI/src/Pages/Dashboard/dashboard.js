@@ -18,7 +18,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
 
 			if (success) {
 				setIsAuthenticated(true)
-				navigate('/todolistuser')
+				navigate('/newtask')
 			}
 		} catch (error) {
 			console.log(error)
@@ -30,6 +30,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
 			username={username}
 			password={password}
 			error={error}
+
 			setUsername={setUsername}
 			setPassword={setPassword}
 			handleLoginClick={handleLoginClick}

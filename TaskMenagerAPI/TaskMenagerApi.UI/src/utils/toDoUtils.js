@@ -4,24 +4,13 @@ export const statusEnum = {
 	Blocked: 'Blocked',
 }
 
-export const startEditing = (
-	taskId,
-	todo,
-	setIsEditing,
-	setEditingTask,
-	title,
-	description,
-	dueDate,
-	format,
-	status
-) => {
-	const taskToEdit = todo.find(task => task.id === taskId)
+export const startEditing = (taskId, task, setEditTask, title, description, dueDate, status, format) => {
+	const taskToEdit = task.find(task => task.id === taskId)
 	if (!taskToEdit) {
 		return
 	}
 
-	setIsEditing(true)
-	setEditingTask(taskId)
+	setEditTask(taskId)
 	populateFormFields(title, description, dueDate, status, taskToEdit, format)
 }
 
@@ -53,7 +42,7 @@ export const sortById = (todo, setTodo) => {
 export const searchTodo = (searchTerm, originalTodo, setSearchResults) => {
 	if (typeof searchTerm !== 'string') {
 		return
-	}
+	} 
 
 	const filteredTasks = originalTodo.filter(task => task.title.toLowerCase().includes(searchTerm.toLowerCase()))
 	setSearchResults(filteredTasks)
@@ -94,7 +83,7 @@ export const successTodo = (taskId, todo, setTodo, updatedSuccess, completed, se
 		})
 }
 
-export const GetUserIdForTask = (editingTask, todo) => {
-	const task = todo.find(task => task.id === editingTask)
-	return task ? task.userId : 'Something went wrong'
+export const GetUserIdForTask = (editingTask, task) => {
+	const taskEd = task.find(task => task.id === editingTask)
+	return taskEd ? task.userId : 'Something went wrong'
 }

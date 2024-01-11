@@ -1,21 +1,17 @@
 import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { handleLogin } from '../../../services/loginServices'
 
 export function LoginForm(props) {
 	const {
-		loginUser,
 		username,
 		password,
 		setUsername,
 		setPassword,
 		error,
-		Link,
-		navigate,
-		setError,
-		setIsAuthenticated,
 		handleLoginClick,
 	} = props
 
@@ -24,7 +20,7 @@ export function LoginForm(props) {
 			handleLoginClick()
 		}
 	}
-
+	
 	return (
 		<section id='main'>
 			<div className='hero hero-img'>
@@ -32,9 +28,11 @@ export function LoginForm(props) {
 				<div className='box-text'>
 					<h1 className='hero-title'>TaskManager</h1>
 					<p className='hero-text'>Jakis opis aplikacji</p>
-					<Button as={Link} to='/SignUp' variant='outline-light ' className='BtnLogin'>
-						Sign In
-					</Button>{' '}
+					<Link to='/SignUp'>
+						<Button variant='outline-light' className='BtnSingUp'>
+							SignUp
+						</Button>
+					</Link>
 				</div>
 			</div>
 			<div className='login'>
@@ -62,11 +60,12 @@ export function LoginForm(props) {
 						<div className='bot'></div>
 					</Form.Group>
 					{error && <p className='error'>{error}</p>}
-					<Button className='BtnLogin' onClick={handleLoginClick}>
+					<a className='custom-button' onClick={handleLoginClick}>
 						Login
-					</Button>{' '}
+					</a>{' '}
 				</Form>
 			</div>
 		</section>
 	)
 }
+

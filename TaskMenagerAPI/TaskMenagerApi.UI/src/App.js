@@ -3,12 +3,12 @@ import Layout from './components/shared/Layout/Layout'
 
 import { Route, Routes, Router, Navigate } from 'react-router-dom'
 import Dashboard from './Pages/Dashboard/dashboard'
-import ToDoListUser from './Pages/ToDoListUser/toDoListUser'
+import NewTask from './Pages/NewTask/NewTask'
 import ToDoListAdmin from './Pages/ToDoListAdmin/toDoListAdmin'
 import UsersListAdmin from './Pages/UsersListAdmin/usersListAdmin'
-
-import { useState } from 'react'
 import SignUp from './Pages/SignUp/signUp'
+import TaskList from './Pages/TasksList/TaskList'
+import { useState } from 'react'
 
 const User_Types = {
 	Public_User: 'Public User',
@@ -24,10 +24,8 @@ function App() {
 	return (
 		<Routes>
 			<Route
-				path='/'
-				element={
-					isAuthenticated ? <Navigate to='/todolistuser' /> : <Dashboard setIsAuthenticated={setIsAuthenticated} />
-				}
+				path='/TaskMenager'
+				element={isAuthenticated ? <Navigate to='/newtask' /> : <Dashboard setIsAuthenticated={setIsAuthenticated} />}
 			/>
 			<Route
 				path='/ToDoListAdmin'
@@ -35,7 +33,7 @@ function App() {
 					current_user_type === User_Types.Admin_User ? (
 						<AdminElement>
 							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-								<ToDoListAdmin />
+								<TaskList />
 							</Layout>
 						</AdminElement>
 					) : (
@@ -60,16 +58,30 @@ function App() {
 
 			<Route path='/signup' element={<SignUp />} />
 			<Route
-				path='/todolistuser'
+				path='/newtask'
 				element={
 					current_user_type === User_Types.Admin_User || current_user_type === User_Types.Normal_User ? (
 						<UserElement>
 							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-								<ToDoListUser />
+								<NewTask />
 							</Layout>
 						</UserElement>
 					) : (
-						<Navigate to='/todolistuser' />
+						<Navigate to='/newtask' />
+					)
+				}
+			/>
+			<Route
+				path='/TaskList'
+				element={
+					current_user_type === User_Types.Admin_User || current_user_type === User_Types.Normal_User ? (
+						<UserElement>
+							<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
+								<TaskList />
+							</Layout>
+						</UserElement>
+					) : (
+						<div>You don't have access to this page</div>
 					)
 				}
 			/>
@@ -85,7 +97,7 @@ function UserElement({ children }) {
 	if (current_user_type === User_Types.Admin_User || current_user_type === User_Types.Normal_User) {
 		return <>{children}</>
 	} else {
-		return <Navigate to={'/todolistuser'} />
+		return <Navigate to={'/newtask'} />
 	}
 }
 

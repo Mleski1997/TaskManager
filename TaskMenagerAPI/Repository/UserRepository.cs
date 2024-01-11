@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Runtime.CompilerServices;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
@@ -31,7 +32,7 @@ namespace TaskMenagerAPI.Repository
         }
         public async Task <ICollection<ToDo>> GetTodoesFromTodo(string userId)
         {
-            return await _context.ToDoes.Where(r => r.UserId == userId).ToListAsync();
+            return await _context.ToDoes.Where(t => t.UserToDoes.Any(ut => ut.UserId == userId)).ToListAsync();
         }
 
   

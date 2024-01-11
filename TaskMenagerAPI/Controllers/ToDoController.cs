@@ -135,32 +135,24 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
 
-        public async Task <IActionResult> CreateTodo([FromQuery] string userId, [FromBody] ToDoDTO todoCreate)
+        public async Task <IActionResult> CreateTodo([FromBody] ToDoDTO todoCreate)
         {
            
-
-           // var todoes = await _toDoRepository.GetAllToDo();
-            //var todo = todoes.FirstOrDefault(x => x.Title.Trim().ToUpper() == todoCreate.Title.Trim().ToUpper());
-
-           // if (todoes != null)
-           // {
-            //    ModelState.AddModelError("", "Task altready exist");
-            //    return StatusCode(422, ModelState);
-           // }
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var todoMap = _mapper.Map<ToDo>(todoCreate);
-            
-            todoMap.User = await _userRepository.GetUser(userId);
-
-            if(!await _toDoRepository.CreateToDo(todoMap))
+            var todo = _mapper.Map<ToDo>(todoCreate);
+            foreach (var userId in todoCreate.UserIds)
             {
-                ModelState.AddModelError("", "Something went wrong whith saving");
-                return StatusCode(500, ModelState);
+                var userToDo = new UserToDo { UserId = userId, ToDo = todo };
+                _context.UserToDoes.Add(userToDo);
             }
+
+
+            _context.ToDoes.Add(todo);
+            await _context.SaveChangesAsync();
 
             return Ok("Seccefully created");
 
@@ -169,7 +161,7 @@ namespace TaskMenagerAPI.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task <IActionResult> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
+        public async Task <IActionResult> UpdateToDo(int todoId, [FromBody] ToDoEditDTO updatedToDo)
         {
           
             bool toDoUpdated = await _toDoRepository.UpdateToDo(todoId, updatedToDo);

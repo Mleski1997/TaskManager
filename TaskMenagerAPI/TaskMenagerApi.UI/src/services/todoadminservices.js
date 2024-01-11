@@ -19,3 +19,4 @@ export async function fetchTasks(setTodo, setOrginalTodo, setCompleted) {
 		console.log('Error with fetch task')
 	}
 }
+

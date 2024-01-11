@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using Microsoft.VisualBasic;
 using TaskMenagerAPI.Data;
 using TaskMenagerAPI.DTO;
 using TaskMenagerAPI.Interfaces;
@@ -11,6 +13,7 @@ namespace TaskMenagerAPI.Repository
     public class ToDoRepository : IToDoRepository
     {
         private readonly DataContext _context;
+        
 
         public ToDoRepository(DataContext context)
         {
@@ -19,7 +22,10 @@ namespace TaskMenagerAPI.Repository
 
         public async Task <bool> CreateToDo(ToDo toDo)
         {
+           
             _context.Add(toDo);
+
+           
             return await Save();
         }
 
@@ -40,8 +46,8 @@ namespace TaskMenagerAPI.Repository
             }
 
             var todoes = await _context.ToDoes
-                .Where(todo => todo.UserId == user.Id)
-                .ToListAsync();
+                .Where(t => t.UserToDoes.Any(ut => ut.UserId == user.Id))
+        .ToListAsync();
 
             return (ICollection<ToDo>)todoes.Select(todo => new ToDoDTO
             {
@@ -50,7 +56,7 @@ namespace TaskMenagerAPI.Repository
                 Description = todo.Description,
                 Status = todo.Status,
                 DueDate = todo.DueDate,
-                UserId = todo.UserId
+               
             }).ToList();
         }
 
@@ -79,16 +85,17 @@ namespace TaskMenagerAPI.Repository
 
         public async Task <ToDo> GetTodo(int todoId)
         {
-            return await _context.ToDoes.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == todoId);
+            return await _context.ToDoes.Include(t => t.UserToDoes).FirstOrDefaultAsync(t => t.Id == todoId);
         }
     
-        public async Task <bool> UpdateToDo(int todoId, [FromBody] ToDoDTO updatedToDo)
+        public async Task <bool> UpdateToDo(int todoId, [FromBody] ToDoEditDTO updatedToDo)
         {
             var editToDo = await _context.ToDoes.FirstOrDefaultAsync(t => t.Id == todoId);
             if (editToDo == null)
             {
                 return false;
             }
+       
             
                 editToDo.Status = (Status)updatedToDo.Status;
                 editToDo.Title = updatedToDo.Title;

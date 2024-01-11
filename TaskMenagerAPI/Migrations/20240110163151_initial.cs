@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TaskMenagerAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class seeder : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -167,7 +167,7 @@ namespace TaskMenagerAPI.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,8 +176,29 @@ namespace TaskMenagerAPI.Migrations
                         name: "FK_ToDoes_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserToDoes",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ToDoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserToDoes", x => new { x.UserId, x.ToDoId });
+                    table.ForeignKey(
+                        name: "FK_UserToDoes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserToDoes_ToDoes_ToDoId",
+                        column: x => x.ToDoId,
+                        principalTable: "ToDoes",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -223,6 +244,11 @@ namespace TaskMenagerAPI.Migrations
                 name: "IX_ToDoes_UserId",
                 table: "ToDoes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserToDoes_ToDoId",
+                table: "UserToDoes",
+                column: "ToDoId");
         }
 
         /// <inheritdoc />
@@ -244,10 +270,13 @@ namespace TaskMenagerAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ToDoes");
+                name: "UserToDoes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ToDoes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

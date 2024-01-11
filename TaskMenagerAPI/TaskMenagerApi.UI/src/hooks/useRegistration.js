@@ -10,11 +10,10 @@ export const useRegistration = () => {
 
 	const navigate = useNavigate()
 
-    
 	const registerUser = async () => {
 		if (password !== checkPassword) {
 			setError('Password and Confirm Password do not match')
-			return
+			return false
 		}
 
 		try {
@@ -25,7 +24,7 @@ export const useRegistration = () => {
 			})
 
 			if (response.status === 200) {
-				navigate('/')
+				navigate('/TaskMenager')
 			} else {
 				setError('Registration failed')
 			}
@@ -36,6 +35,7 @@ export const useRegistration = () => {
 				setError('Error: ' + error.message)
 			}
 		}
+		return true
 	}
 
 	return {

@@ -1,10 +1,11 @@
+import { Link } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
+import '../../../styles/buttons.css'
 
-export function dashboardLogin(props) {
-	const { Link, username, setUsername, handleKeyDown, password, setPassword, error, handleLoginClick } = props
+export function DashboardLogin(props) {
+	const { username, setUsername, handleKeyDown, password, setPassword, error, handleLoginClick } = props
 
 	return (
 		<section id='main'>
@@ -12,9 +13,9 @@ export function dashboardLogin(props) {
 				<div className='hero-shadow'></div>
 				<div className='box-text'>
 					<h1 className='hero-title'>TaskManager</h1>
-					<p className='hero-text'>Jakis opis aplikacji</p>
-					<Button as={Link} to='/SignUp' variant='outline-light ' className='BtnLogin'>
-						Sign In
+					<p className='hero-text'>Jakis opis </p>
+					<Button as={Link} to='/SignUp' variant='outline-light' className='BtnLogin'>
+						Sign Up
 					</Button>{' '}
 				</div>
 			</div>
@@ -43,9 +44,9 @@ export function dashboardLogin(props) {
 						<div className='bot'></div>
 					</Form.Group>
 					{error && <p className='error'>{error}</p>}
-					<Button className='BtnLogin' onClick={handleLoginClick}>
+					<button className='custom-button' onClick={handleLoginClick}>
 						Login
-					</Button>{' '}
+					</button>{' '}
 				</Form>
 			</div>
 		</section>
