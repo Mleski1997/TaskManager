@@ -12,8 +12,8 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240110163151_initial")]
-    partial class initial
+    [Migration("20240127120904_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -336,11 +336,13 @@ namespace TaskMenagerAPI.Migrations
                     b.HasOne("TaskMenagerAPI.Models.ToDo", "ToDo")
                         .WithMany("UserToDoes")
                         .HasForeignKey("ToDoId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TaskMenagerAPI.Models.User", "User")
                         .WithMany("UserToDoes")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ToDo");

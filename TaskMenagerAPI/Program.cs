@@ -114,12 +114,13 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<DataContext>();
-    dbContext.Database.Migrate();
+
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
 
     Seeder.InInitializerAsync(userManager, roleManager).Wait();
+
 }
 
 

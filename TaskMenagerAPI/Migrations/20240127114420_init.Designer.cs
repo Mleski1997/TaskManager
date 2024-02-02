@@ -12,8 +12,8 @@ using TaskMenagerAPI.Data;
 namespace TaskMenagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240111090158_seed2")]
-    partial class seed2
+    [Migration("20240127114420_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

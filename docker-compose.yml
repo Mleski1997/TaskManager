@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  backend-app:
+    build:
+      context: ./TaskMenagerAPI
+      dockerfile: Dockerfile
+    ports:
+      - '7219:80'
+    depends_on:
+      - db
+
+  frontend-app:
+    build:
+      context: ./TaskMenagerAPI.UI
+      dockerfile: Dockerfile
+
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend-app
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: P@ssw0rd
+      ACCEPT_EULA: Y
+    ports:
+      - '1433:1433'
